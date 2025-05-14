@@ -1,19 +1,19 @@
 import os
-import requests
+import torch
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from transformers import GPTNeoForCausalLM, GPT2Tokenizer
 
 app = Flask(__name__)
 CORS(app)
 
-# Hugging Face API info
-HF_API_URL = "https://api-inference.huggingface.co/models/gpt2"
-HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Caution: Use env var securely
+# Load GPT-Neo model and tokenizer
+model_name = "EleutherAI/gpt-neo-2.7B"  # You can choose a different size/model if needed
+model = GPTNeoForCausalLM.from_pretrained(model_name)
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
-HEADERS = {
-    "Authorization": f"Bearer {HF_API_TOKEN}",
-    "Content-Type": "application/json"
-}
+# Ensure the model is in evaluation mode
+model.eval()
 
 @app.route('/personalize', methods=['POST'])
 def personalize():
@@ -36,7 +36,6 @@ def personalize():
     personalized_content = personalize_text(goal, base_text)
     return jsonify({"response": personalized_content})
 
-
 def personalize_text(goal, base_text):
     prompt = (
         f"The user's goal is: {goal}\n"
@@ -45,33 +44,20 @@ def personalize_text(goal, base_text):
         f"Text to personalize:\n{base_text.strip()}"
     )
 
-    payload = {
-        "inputs": prompt,
-        "parameters": {
-            "max_new_tokens": 500,
-            "temperature": 0.4
-        }
-    }
+    # Tokenize the input prompt
+    inputs = tokenizer(prompt, return_tensors="pt", truncation=True, padding=True)
 
-    try:
-        response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
-        response.raise_for_status()
-        result = response.json()
-        full_text = result[0].get("generated_text", "").strip()
+    # Generate the personalized text
+    with torch.no_grad():
+        output = model.generate(inputs['input_ids'], max_length=500, temperature=0.7, num_return_sequences=1)
 
-        # Remove the prompt from the output
-        if full_text.startswith(prompt):
-            ai_only_response = full_text[len(prompt):].strip()
-        else:
-            ai_only_response = full_text
-
-        return ai_only_response
-
-    except Exception as e:
-        return f"Error generating content: {str(e)}"
+    # Decode and clean up the output
+    personalized_text = tokenizer.decode(output[0], skip_special_tokens=True)
+    return personalized_text
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
