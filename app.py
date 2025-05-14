@@ -7,7 +7,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Hugging Face API info
-HF_API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+HF_API_URL = "HF_API_URL = "https://api-inference.huggingface.co/models/gpt2"
+"
 HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Caution: Use env var securely
 
 HEADERS = {
