@@ -22,8 +22,15 @@ def generate():
     if not prompt:
         return jsonify({"error": "Prompt is required"}), 400
 
+    # Modify the prompt to include goal-specific action list generation
+    prompt_for_model = (
+        f"My goal is: {prompt}. "
+        "Generate a simple daily action list with 3 to 5 practical steps I can take today to move toward this goal. "
+        "Make it encouraging, achievable, and personalized. Return only the action list."
+    )
+
     payload = {
-        "inputs": prompt,
+        "inputs": prompt_for_model,
         "parameters": {
             "max_new_tokens": 100,
             "temperature": 0.7
@@ -44,6 +51,3 @@ def generate():
 if __name__ == "__main__":
     app.run(debug=True)
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
