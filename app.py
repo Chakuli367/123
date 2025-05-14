@@ -1,44 +1,19 @@
 import os
-from flask import Flask, jsonify, request
 import requests
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Enable CORS
 
-# Use environment variable if available, fallback to default
-OPENROUTER_API_KEY = os.getenv(
-    "OPENROUTER_API_KEY", 
-    "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"
-)
+# Hugging Face model and token
+HF_API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Replace or use .env
 
-MODEL_NAME = "meta-llama/llama-3-8b-instruct"
-TIMEOUT = 10
-MAX_TOKENS = 500  # Stay under OpenRouter free tier limits
-
-def generate_response(prompt):
-    url = "https://openrouter.ai/api/v1/chat/completions"
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
-    }
-    data = {
-        "model": MODEL_NAME,
-        "messages": [{"role": "user", "content": prompt}],
-        "max_tokens": MAX_TOKENS
-    }
-
-    try:
-        response = requests.post(url, json=data, headers=headers, timeout=TIMEOUT)
-        response.raise_for_status()
-        result = response.json()
-        return result['choices'][0]['message']['content']
-    except requests.exceptions.HTTPError as e:
-        return f"❌ HTTP error: {e} - {response.text}"
-    except requests.exceptions.RequestException as e:
-        return f"❌ Request error: {e}"
-    except Exception as e:
-        return f"⚠️ Unexpected error: {e}"
+HEADERS = {
+    "Authorization": f"Bearer {HF_API_TOKEN}",
+    "Content-Type": "application/json"
+}
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -47,8 +22,28 @@ def generate():
     if not prompt:
         return jsonify({"error": "Prompt is required"}), 400
 
-    ai_response = generate_response(prompt)
-    return jsonify({"response": ai_response})
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "max_new_tokens": 100,
+            "temperature": 0.7
+        }
+    }
+
+    try:
+        response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
+        response.raise_for_status()
+        result = response.json()
+        generated = result[0].get("generated_text", "⚠️ No output generated.")
+        return jsonify({"response": generated})
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e), "details": response.text}), 500
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
