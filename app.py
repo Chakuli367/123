@@ -4,11 +4,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Enable CORS for all routes
 
 # Hugging Face model and token
 HF_API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
-HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")
+HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Replace this in production
 
 HEADERS = {
     "Authorization": f"Bearer {HF_API_TOKEN}",
@@ -23,19 +23,24 @@ def generate():
     if not goal:
         return jsonify({"error": "Prompt is required"}), 400
 
-    # Construct the better prompt with required format
+    # Compose structured prompt to discourage model from echoing
     prompt_for_model = (
-        f"My goal is: {goal}.\n\n"
-        "Please respond in the following exact format and DO NOT repeat the input:\n\n"
+        f"You are a helpful assistant.\n\n"
+        f"User's goal: {goal}\n\n"
+        "Your task:\n"
+        "- Do NOT repeat the user's goal.\n"
+        "- Give exactly 1 short practical tip.\n"
+        "- Then, provide a 3–5 step daily action list.\n"
+        "- Format it EXACTLY like this:\n\n"
         "💡 Tip:\n"
-        "[One short, practical, encouraging tip.]\n\n"
+        "Your tip here\n\n"
         "📅 Daily Action List:\n"
-        "1. [Step 1 - small and specific]\n"
-        "2. [Step 2]\n"
-        "3. [Step 3]\n"
-        "4. [Step 4]\n"
-        "5. [Step 5 - optional]\n\n"
-        "Only return the tip and the action list using this exact format."
+        "1. First actionable step\n"
+        "2. Second step\n"
+        "3. Third step\n"
+        "4. Fourth (optional)\n"
+        "5. Fifth (optional)\n\n"
+        "Only return the response in this format. Do not repeat the user's goal or instructions."
     )
 
     payload = {
@@ -50,12 +55,22 @@ def generate():
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
-        generated = result[0].get("generated_text", "⚠️ No output generated.")
+
+        generated = result[0].get("generated_text", "").strip()
+
+        # Strip echoed goal if included
+        if goal in generated:
+            generated = generated.split(goal, 1)[-1].strip()
+
+        generated = generated.replace("User's goal:", "").strip()
+
         return jsonify({"response": generated})
+
     except requests.exceptions.RequestException as e:
-        return jsonify({"error": str(e), "details": response.text}), 500
+        return jsonify({"error": str(e)}), 500
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
+
