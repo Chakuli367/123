@@ -23,7 +23,7 @@ def generate():
     if not goal:
         return jsonify({"error": "Prompt is required"}), 400
 
-    # Compose structured prompt to discourage model from echoing
+    # Refined prompt
     prompt_for_model = (
         f"You are a helpful assistant.\n\n"
         f"User's goal: {goal}\n\n"
@@ -46,7 +46,7 @@ def generate():
     payload = {
         "inputs": prompt_for_model,
         "parameters": {
-            "max_new_tokens": 200,
+            "max_new_tokens": 250,
             "temperature": 0.3
         }
     }
@@ -55,14 +55,12 @@ def generate():
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
-
         generated = result[0].get("generated_text", "").strip()
 
-        # Strip echoed goal if included
-        if goal in generated:
-            generated = generated.split(goal, 1)[-1].strip()
-
-        generated = generated.replace("User's goal:", "").strip()
+        # Only return from the start of the actual tip
+        if "💡 Tip:" in generated:
+            generated = generated.split("💡 Tip:", 1)[-1].strip()
+            generated = "💡 Tip:\n" + generated  # Re-add heading cleanly
 
         return jsonify({"response": generated})
 
@@ -73,4 +71,5 @@ def generate():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
