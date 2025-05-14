@@ -6,9 +6,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Hugging Face API settings
+# Hugging Face API info
 HF_API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
-HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Store securely
+HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Caution: Use env var securely
 
 HEADERS = {
     "Authorization": f"Bearer {HF_API_TOKEN}",
@@ -23,37 +23,33 @@ def personalize():
     if not goal:
         return jsonify({"error": "'goal' is required"}), 400
 
-    # Base HTML block (this matches what your page shows)
-    html_content = """
-    <div>
-        <p><strong>Principle:</strong> Show genuine interest in people.</p>
-        <p>Tips for the day:</p>
-        <ul>
-            <li>Ask someone about their day and listen actively.</li>
-            <li>Use their name during the conversation.</li>
-            <li>Compliment something you genuinely admire.</li>
-            <li>Reflect on what you learned about others today.</li>
-        </ul>
-    </div>
-    """
+    base_text = (
+        "Day 1 – Become Genuinely Interested in Others\n"
+        "Principle: Show genuine interest in people.\n\n"
+        "Action Plan:\n"
+        "Ask about their day — listen actively, don’t interrupt.\n"
+        "Remember and use their name at least once in the conversation.\n"
+        "Compliment someone on something you admire — like “their energy“.\n"
+        "Write down the names and one thing you learned about each person."
+    )
 
-    personalized_content = personalize_html_content(goal, html_content)
+    personalized_content = personalize_text(goal, base_text)
     return jsonify({"response": personalized_content})
 
 
-def personalize_html_content(goal, html_content):
-    instructions = (
+def personalize_text(goal, base_text):
+    prompt = (
         f"The user's goal is: {goal}\n"
-        "Personalize the following HTML block to better fit this goal.\n"
-        "Keep it actionable, motivational, and relevant to the user's intent.\n"
-        f"HTML to personalize:\n{html_content}"
+        "Please rewrite the following daily mission text to make it more personal and aligned with this goal.\n"
+        "Keep the core principle but adjust the action steps and tone so that it's directly relevant and motivating for the user.\n\n"
+        f"Text to personalize:\n{base_text.strip()}"
     )
 
     payload = {
-        "inputs": instructions,
+        "inputs": prompt,
         "parameters": {
             "max_new_tokens": 500,
-            "temperature": 0.3
+            "temperature": 0.4
         }
     }
 
@@ -61,12 +57,21 @@ def personalize_html_content(goal, html_content):
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
-        return result[0].get("generated_text", "").strip()
+        full_text = result[0].get("generated_text", "").strip()
+
+        # Remove the prompt from the output
+        if full_text.startswith(prompt):
+            ai_only_response = full_text[len(prompt):].strip()
+        else:
+            ai_only_response = full_text
+
+        return ai_only_response
 
     except Exception as e:
-        return f"<div>Error generating content: {str(e)}</div>"
+        return f"Error generating content: {str(e)}"
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
