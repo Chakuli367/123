@@ -37,8 +37,17 @@ def generate():
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
+
+        # Logging the response to debug
+        print("Response from model:", result)
+
+        # Check if the response has the expected format
         generated = result[0].get("generated_text", "⚠️ No output generated.")
+        if generated == "⚠️ No output generated.":
+            return jsonify({"error": "Failed to generate text. Model response might be empty."}), 500
+        
         return jsonify({"response": generated})
+    
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e), "details": response.text}), 500
     except Exception as e:
