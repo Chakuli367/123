@@ -4,11 +4,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# Hugging Face model and token
+# Hugging Face model info
 HF_API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
-HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Replace this in production
+HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")  # Secure this!
 
 HEADERS = {
     "Authorization": f"Bearer {HF_API_TOKEN}",
@@ -23,8 +23,8 @@ def generate():
     if not goal:
         return jsonify({"error": "Prompt is required"}), 400
 
-    # REVISED PROMPT: Avoid repeating the goal or prompt instructions
-    prompt_for_model = (
+    # Create prompt for the model
+    instructions = (
         f"The user's goal is: {goal}\n"
         "Provide a **short, actionable tip** to help them achieve it.\n"
         "Follow it with a **Daily Action List** containing 3-5 concrete steps they can take today toward their goal.\n"
@@ -35,7 +35,7 @@ def generate():
     )
 
     payload = {
-        "inputs": prompt_for_model,
+        "inputs": instructions,
         "parameters": {
             "max_new_tokens": 250,
             "temperature": 0.3
@@ -46,13 +46,15 @@ def generate():
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
-        generated = result[0].get("generated_text", "").strip()
+        raw_output = result[0].get("generated_text", "").strip()
 
-        # Remove the prompt entirely from the output wherever it appears
-        if f"The user's goal is: {goal}" in generated:
-            generated = generated.replace(f"The user's goal is: {goal}", "").strip()
+        # Remove all possible prompt text from the output
+        for line in instructions.split("\n"):
+            raw_output = raw_output.replace(line.strip(), "")
 
-        return jsonify({"response": generated})
+        cleaned_output = raw_output.strip()
+
+        return jsonify({"response": cleaned_output})
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
