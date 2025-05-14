@@ -3,3 +3,5 @@ gunicorn
 requests
 flask-cors
 ollama
+transformers 
+torch
