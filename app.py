@@ -13,6 +13,15 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 model.eval()
 
+@app.before_request
+def handle_preflight():
+    if request.method == 'OPTIONS':
+        response = app.make_response()
+        response.headers['Access-Control-Allow-Origin'] = 'https://goalgrid.wpcomstaging.com'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        return response
+
 @app.route('/personalize', methods=['POST'])
 def personalize():
     data = request.get_json()
