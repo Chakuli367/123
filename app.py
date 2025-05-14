@@ -15,46 +15,50 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-@app.route('/generate', methods=['POST'])
-def generate():
+@app.route('/personalize', methods=['POST'])
+def personalize():
     data = request.get_json()
-    goal = data.get("prompt", "").strip()
+    goal = data.get("goal", "").strip()
+    html_content = data.get("html_content", "").strip()
 
-    if not goal:
-        return jsonify({"error": "Prompt is required"}), 400
+    if not goal or not html_content:
+        return jsonify({"error": "Both 'goal' and 'html_content' are required"}), 400
 
-    # Create prompt for the model
+    # Generate personalized content based on the goal and existing HTML block content
+    personalized_content = personalize_html_content(goal, html_content)
+
+    return jsonify({"response": personalized_content})
+
+def personalize_html_content(goal, html_content):
+    # Create personalized prompt for the model based on the user's goal and HTML content
     instructions = (
         f"The user's goal is: {goal}\n"
-        "Provide a **short, actionable tip** to help them achieve it.\n"
-        "Follow it with a **Daily Action List** containing 3-5 concrete steps they can take today toward their goal.\n"
-        "Format the response exactly as follows:\n"
-        "- Tip (preceded by the emoji 💡): short and actionable advice.\n"
-        "- Daily Action List (preceded by 📅): numbered steps (3-5).\n"
-        "Please avoid repeating the user's goal or your instructions. Return only the formatted output."
+        "Personalize the following HTML content based on this goal.\n"
+        "You should focus on providing **actionable advice** and make sure the content aligns with the user's objective.\n"
+        "Here's the existing content:\n"
+        f"{html_content}\n"
+        "Update the content to make it more relevant and tailored to the goal.\n"
+        "Ensure the new content is actionable and motivating.\n"
+        "Format the response exactly as the original HTML block, but with personalized content."
     )
 
     payload = {
         "inputs": instructions,
         "parameters": {
-            "max_new_tokens": 250,
+            "max_new_tokens": 500,
             "temperature": 0.3
         }
     }
 
+    # Request personalized content from the model
     try:
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
         raw_output = result[0].get("generated_text", "").strip()
 
-        # Remove all possible prompt text from the output
-        for line in instructions.split("\n"):
-            raw_output = raw_output.replace(line.strip(), "")
-
-        cleaned_output = raw_output.strip()
-
-        return jsonify({"response": cleaned_output})
+        # Return the personalized HTML content
+        return raw_output
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
