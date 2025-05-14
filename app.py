@@ -18,17 +18,21 @@ HEADERS = {
 @app.route('/generate', methods=['POST'])
 def generate():
     data = request.get_json()
-    goal = data.get("goal", "")  # Retrieve goal from the request data
-    if not goal:
-        return jsonify({"error": "Goal is required"}), 400
+    prompt = data.get("prompt", "")
+    if not prompt:
+        return jsonify({"error": "Prompt is required"}), 400
 
-    # Refined prompt to get both a practical tip and action list
-    prompt = f"My goal is: {goal}.\nGive me one practical tip to achieve it, and then generate a simple daily action list with 3 to 5 practical steps I can take today to move toward this goal. The action list should be clear, achievable, and personalized for the goal of '{goal}'."
+    # Modify the prompt to include goal-specific action list generation
+    prompt_for_model = (
+        f"My goal is: {prompt}. "
+        "Generate a simple daily action list with 3 to 5 practical steps I can take today to move toward this goal. "
+        "Make it encouraging, achievable, and personalized. Return only the action list."
+    )
 
     payload = {
-        "inputs": prompt,
+        "inputs": prompt_for_model,
         "parameters": {
-            "max_new_tokens": 150,
+            "max_new_tokens": 100,
             "temperature": 0.7
         }
     }
@@ -37,17 +41,8 @@ def generate():
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
-
-        # Logging the response to debug
-        print("Response from model:", result)
-
-        # Check if the response has the expected format
         generated = result[0].get("generated_text", "⚠️ No output generated.")
-        if generated == "⚠️ No output generated.":
-            return jsonify({"error": "Failed to generate text. Model response might be empty."}), 500
-        
         return jsonify({"response": generated})
-    
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e), "details": response.text}), 500
     except Exception as e:
