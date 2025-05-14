@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://goalgrid.wpcomstaging.com"}})
+CORS(app, resources={r"/generate": {"origins": "https://goalgrid.wpcomstaging.com"}})
 
 # Hugging Face model info
 HF_API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
@@ -15,17 +15,21 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
+@app.route('/')
+def index():
+    return "Backend is running."
+
 @app.route('/generate', methods=['POST'])
 def generate():
     data = request.get_json()
-    goal = data.get("prompt", "").strip()
+    user_input = data.get("prompt", "").strip()
 
-    if not goal:
+    if not user_input:
         return jsonify({"error": "Prompt is required"}), 400
 
-    # Create prompt for the model
-    instructions = (
-        '''You are a personal development coach. The following text is Day 1 of a user's self-improvement journey based on the principle of "Become Genuinely Interested in Others." Your task is to personalize the message, focusing on the user's specific interests, goals, and current challenges. You should make the message feel engaging and practical, motivating them to take action. Make sure the action plan is personalized and aligned with their personal journey.
+    # Inject user's prompt into the instruction block
+    instructions = f'''
+You are a personal development coach. The following text is Day 1 of a user's self-improvement journey based on the principle of "Become Genuinely Interested in Others." Your task is to personalize the message, focusing on the user's specific interests, goals, and current challenges. You should make the message feel engaging and practical, motivating them to take action. Make sure the action plan is personalized and aligned with their personal journey.
 
 Here is the base text for Day 1:
 
@@ -45,14 +49,10 @@ Today’s principle is about making authentic connections with others. Building 
 
 ---
 
-**User Input:**
-- [User's Goals]
-- [User's Interests]
-- [User's Current Challenges]
+User Input: {user_input}
 
-**Personalized Day 1 Message:**'''
-
-    )
+Personalized Day 1 Message:
+'''
 
     payload = {
         "inputs": instructions,
@@ -66,14 +66,14 @@ Today’s principle is about making authentic connections with others. Building 
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
         response.raise_for_status()
         result = response.json()
-        raw_output = result[0].get("generated_text", "").strip()
 
-        # Remove all possible prompt text from the output
-        for line in instructions.split("\n"):
-            raw_output = raw_output.replace(line.strip(), "")
+        # Hugging Face might return a list of dicts or dict — handle both
+        if isinstance(result, list):
+            raw_output = result[0].get("generated_text", "")
+        else:
+            raw_output = result.get("generated_text", "")
 
-        cleaned_output = raw_output.strip()
-
+        cleaned_output = raw_output.replace(instructions.strip(), "").strip()
         return jsonify({"response": cleaned_output})
 
     except requests.exceptions.RequestException as e:
@@ -82,5 +82,5 @@ Today’s principle is about making authentic connections with others. Building 
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
-
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
