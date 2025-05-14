@@ -23,11 +23,21 @@ def generate():
         return jsonify({"error": "Prompt is required"}), 400
 
     # Modify the prompt to include goal-specific action list generation
+    # Modify the prompt to include goal-specific action list generation
     prompt_for_model = (
-        f"My goal is: {prompt}. "
-        "Generate a simple daily action list with 3 to 5 practical steps I can take today to move toward this goal. "
-        "Make it encouraging, achievable, and personalized. Return only the action list."
+        f"My goal is: {prompt}.\n\n"
+        "Please respond in the following exact format:\n\n"
+        "💡 Tip:\n"
+        "[Write one short, practical, and encouraging tip to help me achieve this goal.]\n\n"
+        "📅 Daily Action List:\n"
+        "1. [Step 1 - clear, small action I can do today]\n"
+        "2. [Step 2]\n"
+        "3. [Step 3]\n"
+        "4. [Step 4]\n"
+        "5. [Step 5 - optional]\n\n"
+        "Make it personalized, achievable, and motivating. Return only the tip and action list using the exact format above."
     )
+
 
     payload = {
         "inputs": prompt_for_model,
