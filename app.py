@@ -9,7 +9,7 @@ CORS(app)
 # Use environment variable if available, fallback to default
 OPENROUTER_API_KEY = os.getenv(
     "OPENROUTER_API_KEY", 
-    "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"
+    "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"
 )
 
 MODEL_NAME = "meta-llama/llama-3-8b-instruct"
