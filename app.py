@@ -23,24 +23,15 @@ def generate():
     if not goal:
         return jsonify({"error": "Prompt is required"}), 400
 
-    # Refined prompt
+    # REVISED PROMPT: instruct format without inserting the actual words "💡 Tip:" or "📅 Daily Action List:" in the prompt
     prompt_for_model = (
-        f"You are a helpful assistant.\n\n"
-        f"User's goal: {goal}\n\n"
-        "Your task:\n"
-        "- Do NOT repeat the user's goal.\n"
-        "- Give exactly 1 short practical tip.\n"
-        "- Then, provide a 3–5 step daily action list.\n"
-        "- Format it EXACTLY like this:\n\n"
-        "💡 Tip:\n"
-        "Your tip here\n\n"
-        "📅 Daily Action List:\n"
-        "1. First actionable step\n"
-        "2. Second step\n"
-        "3. Third step\n"
-        "4. Fourth (optional)\n"
-        "5. Fifth (optional)\n\n"
-        "Only return the response in this format. Do not repeat the user's goal or instructions."
+        f"The user's goal is: {goal}\n"
+        "Give a short, practical tip to help them achieve it.\n"
+        "Then give a 3–5 step action list for today that will move them toward their goal.\n"
+        "Format your response using the following structure:\n"
+        "1. Start the tip section with the emoji and label for 'Tip'.\n"
+        "2. Then, add a new section labeled 'Daily Action List' with numbered items.\n"
+        "Only return the final formatted response. Do not repeat the user's goal or these instructions."
     )
 
     payload = {
@@ -57,12 +48,14 @@ def generate():
         result = response.json()
         generated = result[0].get("generated_text", "").strip()
 
-        # Only return from the start of the actual tip
-        if "💡 Tip:" in generated:
-            generated = generated.split("💡 Tip:", 1)[-1].strip()
-            generated = "💡 Tip:\n" + generated  # Re-add heading cleanly
+        # Extract response starting from the first occurrence of 💡 Tip:
+        tip_index = generated.find("💡 Tip:")
+        if tip_index != -1:
+            cleaned_output = generated[tip_index:].strip()
+        else:
+            cleaned_output = generated  # fallback if emoji is missing
 
-        return jsonify({"response": generated})
+        return jsonify({"response": cleaned_output})
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
@@ -71,5 +64,3 @@ def generate():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
