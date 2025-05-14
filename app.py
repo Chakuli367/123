@@ -23,15 +23,15 @@ def generate():
     if not goal:
         return jsonify({"error": "Prompt is required"}), 400
 
-    # REVISED PROMPT: instruct format without inserting the actual words "💡 Tip:" or "📅 Daily Action List:" in the prompt
+    # REVISED PROMPT: Avoid repeating the goal or prompt instructions
     prompt_for_model = (
         f"The user's goal is: {goal}\n"
-        "Give a short, practical tip to help them achieve it.\n"
-        "Then give a 3–5 step action list for today that will move them toward their goal.\n"
-        "Format your response using the following structure:\n"
-        "1. Start the tip section with the emoji and label for 'Tip'.\n"
-        "2. Then, add a new section labeled 'Daily Action List' with numbered items.\n"
-        "Only return the final formatted response. Do not repeat the user's goal or these instructions."
+        "Provide a **short, actionable tip** to help them achieve it.\n"
+        "Follow it with a **Daily Action List** containing 3-5 concrete steps they can take today toward their goal.\n"
+        "Format the response exactly as follows:\n"
+        "- Tip (preceded by the emoji 💡): short and actionable advice.\n"
+        "- Daily Action List (preceded by 📅): numbered steps (3-5).\n"
+        "Please avoid repeating the user's goal or your instructions. Return only the formatted output."
     )
 
     payload = {
@@ -48,14 +48,11 @@ def generate():
         result = response.json()
         generated = result[0].get("generated_text", "").strip()
 
-        # Extract response starting from the first occurrence of 💡 Tip:
-        tip_index = generated.find("💡 Tip:")
-        if tip_index != -1:
-            cleaned_output = generated[tip_index:].strip()
-        else:
-            cleaned_output = generated  # fallback if emoji is missing
+        # Remove the prompt entirely from the output wherever it appears
+        if f"The user's goal is: {goal}" in generated:
+            generated = generated.replace(f"The user's goal is: {goal}", "").strip()
 
-        return jsonify({"response": cleaned_output})
+        return jsonify({"response": generated})
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
@@ -64,3 +61,4 @@ def generate():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
