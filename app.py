@@ -25,27 +25,32 @@ def generate():
     # Modify the prompt to include goal-specific action list generation
     # Modify the prompt to include goal-specific action list generation
     prompt_for_model = (
-        f"My goal is: {prompt}.\n\n"
-        "Please respond in the following exact format:\n\n"
-        "💡 Tip:\n"
-        "[Write one short, practical, and encouraging tip to help me achieve this goal.]\n\n"
-        "📅 Daily Action List:\n"
-        "1. [Step 1 - clear, small action I can do today]\n"
-        "2. [Step 2]\n"
-        "3. [Step 3]\n"
-        "4. [Step 4]\n"
-        "5. [Step 5 - optional]\n\n"
-        "Make it personalized, achievable, and motivating. Return only the tip and action list using the exact format above."
-    )
+    f"My goal is: {prompt}.\n\n"
+    "Please respond in the following exact format and DO NOT repeat the input:\n\n"
+    "💡 Tip:\n"
+    "[One short, practical, encouraging tip.]\n\n"
+    "📅 Daily Action List:\n"
+    "1. [Step 1 - small and specific]\n"
+    "2. [Step 2]\n"
+    "3. [Step 3]\n"
+    "4. [Step 4]\n"
+    "5. [Step 5 - optional]\n\n"
+    "Only return the tip and the action list using this exact format."
+)
 
-
-    payload = {
-        "inputs": prompt_for_model,
-        "parameters": {
-            "max_new_tokens": 100,
-            "temperature": 0.7
-        }
+payload = {
+    "inputs": prompt_for_model,
+    "parameters": {
+        "max_new_tokens": 150,
+        "temperature": 0.3
+    },
+    "options": {
+        "use_cache": True,
+        "wait_for_model": True,
+        "return_full_text": False  # <-- IMPORTANT
     }
+}
+
 
     try:
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload)
