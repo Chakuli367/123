@@ -1,12 +1,13 @@
+import os
 from flask import Flask, jsonify, request
 import requests
 from flask_cors import CORS
+
 app = Flask(__name__)
 CORS(app)
 
-
-
-OLLAMA_URL = "http://localhost:11434"
+# Use environment variable for OLLAMA_URL for flexibility
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")  # Default to localhost if not set
 MODEL_NAME = "llama3"
 TIMEOUT = 10  # seconds
 
@@ -57,3 +58,6 @@ def generate():
 
     ai_response = generate_response(prompt)
     return jsonify({"response": ai_response})
+
+if __name__ == "__main__":
+    app.run(debug=True)
