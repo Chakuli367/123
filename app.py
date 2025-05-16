@@ -5,7 +5,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 # Allow CORS only for your frontend domain
-CORS(app, resources={r"/generate": {"origins": "https://goalgrid.wpcomstaging.com"}})
+CORS(app)  # Allows all origins — less secure.
+
 
 # Updated ngrok public URL that forwards to your local backend running Ollama
 OLLAMA_URL = "https://2ec9-2401-4900-1c16-1058-19a4-3a82-5264-32d8.ngrok-free.app/generate"
