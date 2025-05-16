@@ -4,10 +4,12 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
+# Allow CORS only for your frontend domain
 CORS(app, resources={r"/generate": {"origins": "https://goalgrid.wpcomstaging.com"}})
 
-# Your ngrok URL for Ollama API
-OLLAMA_URL = "https://dc41-2401-4900-1c16-1058-19a4-3a82-5264-32d8.ngrok-free.app/api/generate"
+# Your ngrok public URL that forwards to your local backend running Ollama
+OLLAMA_URL = "https://dc41-2401-4900-1c16-1058-19a4-3a82-5264-32d8.ngrok-free.app/generate"  
+# NOTE: The endpoint here should match your local Flask route '/generate', so remove '/api' if your local backend uses '/generate'
 
 @app.route('/')
 def index():
@@ -56,6 +58,7 @@ Personalized Day 1 Message:
             "stream": False
         }
 
+        # Send request to your local backend exposed by ngrok
         response = requests.post(OLLAMA_URL, json=payload)
         response.raise_for_status()
         result = response.json()
@@ -64,7 +67,7 @@ Personalized Day 1 Message:
         return jsonify({"response": ai_output})
 
     except requests.exceptions.RequestException as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Request error: {str(e)}"}), 500
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
