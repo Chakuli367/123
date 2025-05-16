@@ -3,9 +3,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
+
 CORS(app, resources={r"/generate": {"origins": "https://goalgrid.wpcomstaging.com"}})
 
-OLLAMA_URL = "http://localhost:11434/api/generate"  # Ollama API endpoint
+# Your ngrok URL for Ollama API
+OLLAMA_URL = "https://dc41-2401-4900-1c16-1058-19a4-3a82-5264-32d8.ngrok-free.app/api/generate"
 
 @app.route('/')
 def index():
@@ -68,5 +70,4 @@ Personalized Day 1 Message:
 
 
 if __name__ == "__main__":
-    port = 5000
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=5000)
