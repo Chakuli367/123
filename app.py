@@ -4,7 +4,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/generate": {"origins": "https://goalgrid.wpcomstaging.com"}})
+
+CORS(app, origins=["https://goalgrid.wpcomstaging.com"], supports_credentials=True)
 
 # Hugging Face model info
 HF_API_URL = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
