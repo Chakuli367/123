@@ -7,9 +7,8 @@ app = Flask(__name__)
 # Allow CORS only for your frontend domain
 CORS(app, resources={r"/generate": {"origins": "https://goalgrid.wpcomstaging.com"}})
 
-# Your ngrok public URL that forwards to your local backend running Ollama
-OLLAMA_URL = "https://dc41-2401-4900-1c16-1058-19a4-3a82-5264-32d8.ngrok-free.app/generate"  
-# NOTE: The endpoint here should match your local Flask route '/generate', so remove '/api' if your local backend uses '/generate'
+# Updated ngrok public URL that forwards to your local backend running Ollama
+OLLAMA_URL = "https://2ec9-2401-4900-1c16-1058-19a4-3a82-5264-32d8.ngrok-free.app/generate"
 
 @app.route('/')
 def index():
@@ -73,4 +72,4 @@ Personalized Day 1 Message:
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=8888)
