@@ -4,14 +4,13 @@ from openai import OpenAI
 import os
 
 app = Flask(__name__)
-CORS(app)  # Allow all origins
+CORS(app)
 
-# Initialize OpenAI client with Groq API key and base URL
-api_key = os.environ.get("GROQ_API_KEY") or "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"
-
-client = OpenAI(api_key=api_key)
-# Override the default API base to point to Groq endpoint
-client.api_base = "https://api.groq.com/openai/v1"
+# Set Groq API credentials
+client = OpenAI(
+    api_key=os.environ.get("GROQ_API_KEY") or "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",
+    base_url="https://api.groq.com/openai/v1"
+)
 
 @app.route('/')
 def index():
