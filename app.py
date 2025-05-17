@@ -1,16 +1,19 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from ollama import Ollama
+from openai import OpenAI
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all origins (you can restrict this for security)
+CORS(app)  # Enable CORS for all origins (adjust for security as needed)
 
-# Initialize Ollama client
-ollama_client = Ollama()
+# Initialize Groq OpenAI client with base URL and API key
+client = OpenAI(
+    api_key="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",
+    api_base="https://api.groq.com/openai/v1"
+)
 
 @app.route('/')
 def index():
-    return "LLaMA 3 Backend with Ollama Python client is running."
+    return "Groq LLaMA 3 Backend is running."
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -47,22 +50,18 @@ Personalized Day 1 Message:
 '''
 
     try:
-        response = ollama_client.generate(
-            model="llama3",
-            prompt=instructions,
+        response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[{"role": "user", "content": instructions}],
             temperature=0.3,
             max_tokens=250
         )
 
-        # Extract text from Ollama response
-        ai_output = response.get("results", [{}])[0].get("text", "").strip()
-
+        ai_output = response.choices[0].message.content.strip()
         return jsonify({"response": ai_output})
 
     except Exception as e:
-        return jsonify({"error": f"Error calling Ollama: {str(e)}"}), 500
-
+        return jsonify({"error": f"Error calling Groq API: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8888)
-
