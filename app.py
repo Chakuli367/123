@@ -1,13 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import ollama
+from ollama import Ollama
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Enable CORS for all origins (you can restrict this for security)
+
+# Initialize Ollama client
+ollama_client = Ollama()
 
 @app.route('/')
 def index():
-    return "LLaMA 3 Backend is running."
+    return "LLaMA 3 Backend with Ollama Python client is running."
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -44,15 +47,21 @@ Personalized Day 1 Message:
 '''
 
     try:
-        response = ollama.chat(
-            model="llama3.2",
-            messages=[{"role": "user", "content": instructions.format(user_input=user_input)}]
+        response = ollama_client.generate(
+            model="llama3",
+            prompt=instructions,
+            temperature=0.3,
+            max_tokens=250
         )
-        ai_output = response['message']['content'].strip()
+
+        # Extract text from Ollama response
+        ai_output = response.get("results", [{}])[0].get("text", "").strip()
+
         return jsonify({"response": ai_output})
 
     except Exception as e:
-        return jsonify({"error": f"Error: {str(e)}"}), 500
+        return jsonify({"error": f"Error calling Ollama: {str(e)}"}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8888)
