@@ -1,15 +1,9 @@
-import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import ollama
 
 app = Flask(__name__)
-
-# Allow CORS only for your frontend domain
-CORS(app)  # Allows all origins — less secure.
-
-
-# Updated ngrok public URL that forwards to your local backend running Ollama
-OLLAMA_URL = "https://2ec9-2401-4900-1c16-1058-19a4-3a82-5264-32d8.ngrok-free.app/generate"
+CORS(app)
 
 @app.route('/')
 def index():
@@ -50,27 +44,16 @@ Personalized Day 1 Message:
 '''
 
     try:
-        payload = {
-            "model": "llama3",
-            "prompt": instructions,
-            "temperature": 0.3,
-            "max_tokens": 250,
-            "stream": False
-        }
-
-        # Send request to your local backend exposed by ngrok
-        response = requests.post(OLLAMA_URL, json=payload)
-        response.raise_for_status()
-        result = response.json()
-
-        ai_output = result.get("response", "").strip()
+        response = ollama.chat(
+            model="llama3.2",
+            messages=[{"role": "user", "content": instructions.format(user_input=user_input)}]
+        )
+        ai_output = response['message']['content'].strip()
         return jsonify({"response": ai_output})
 
-    except requests.exceptions.RequestException as e:
-        return jsonify({"error": f"Request error: {str(e)}"}), 500
     except Exception as e:
-        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
-
+        return jsonify({"error": f"Error: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8888)
+
