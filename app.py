@@ -3,33 +3,27 @@ from flask_cors import CORS
 import openai
 import os
 
-# Create Flask app
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Allow all origins
 
-# Load Groq API credentials
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY") or "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"
-GROQ_API_BASE = "https://api.groq.com/openai/v1"
+# Set your Groq credentials
+openai.api_key = os.environ.get("GROQ_API_KEY") or "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"
+openai.api_base = "https://api.groq.com/openai/v1"
 
-openai.api_key = GROQ_API_KEY
-openai.api_base = GROQ_API_BASE
-
-@app.route("/")
+@app.route('/')
 def index():
     return "✅ Groq LLaMA 3 Backend is running."
 
-@app.route("/generate", methods=["POST"])
+@app.route('/generate', methods=['POST'])
 def generate():
-    try:
-        data = request.get_json()
-        user_input = data.get("prompt", "").strip()
+    data = request.get_json()
+    user_input = data.get("prompt", "").strip()
 
-        if not user_input:
-            return jsonify({"error": "Prompt is required"}), 400
+    if not user_input:
+        return jsonify({"error": "Prompt is required"}), 400
 
-        # Personalization prompt
-        system_prompt = f"""
-You are a personal development coach. Personalize the following Day 1 text based on the user's specific interests, goals, and current challenges. Make it practical, motivating, and aligned with their journey.
+    instructions = f'''
+You are a personal development coach. The following text is Day 1 of a user's self-improvement journey based on the principle of "Become Genuinely Interested in Others." Your task is to personalize the message, focusing on the user's specific interests, goals, and current challenges. You should make the message feel engaging and practical, motivating them to take action. Make sure the action plan is personalized and aligned with their personal journey.
 
 Here is the base text for Day 1:
 
@@ -52,23 +46,26 @@ Today’s principle is about making authentic connections with others. Building 
 User Input: {user_input}
 
 Personalized Day 1 Message:
-"""
+'''
 
-        # Call Groq API (OpenAI-compatible)
+    try:
         response = openai.ChatCompletion.create(
             model="llama3-8b-8192",
-            messages=[{"role": "user", "content": system_prompt}],
+            messages=[{"role": "user", "content": instructions}],
             temperature=0.3,
             max_tokens=300
         )
+        ai_output = response['choices'][0]['message']['content'].strip()
+        return jsonify({"response": ai_output})
 
-        result = response['choices'][0]['message']['content'].strip()
-        return jsonify({"response": result})
-
+    except openai.error.OpenAIError as oe:
+        # Catch known OpenAI API errors
+        return jsonify({"error": f"OpenAI API error: {str(oe)}"}), 500
     except Exception as e:
-        return jsonify({"error": f"Server error: {str(e)}"}), 500
+        # Catch other errors
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8888))  # Render sets PORT
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=8888)
+
 
