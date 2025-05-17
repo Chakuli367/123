@@ -1,14 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import openai
+from openai import OpenAI
 import os
 
 app = Flask(__name__)
 CORS(app)  # Allow all origins
 
-# Set your Groq credentials
-openai.api_key = os.environ.get("GROQ_API_KEY") or "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"
-openai.api_base = "https://api.groq.com/openai/v1"
+# Initialize OpenAI client with Groq API key and base URL
+api_key = os.environ.get("GROQ_API_KEY") or "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"
+
+client = OpenAI(api_key=api_key)
+# Override the default API base to point to Groq endpoint
+client.api_base = "https://api.groq.com/openai/v1"
 
 @app.route('/')
 def index():
@@ -49,25 +52,18 @@ Personalized Day 1 Message:
 '''
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[{"role": "user", "content": instructions}],
             temperature=0.3,
             max_tokens=300
         )
-        ai_output = response['choices'][0]['message']['content'].strip()
+        ai_output = response.choices[0].message.content.strip()
         return jsonify({"response": ai_output})
 
-    except openai.error.OpenAIError as oe:
-        # Catch known OpenAI API errors
-        return jsonify({"error": f"OpenAI API error: {str(oe)}"}), 500
     except Exception as e:
-        # Catch other errors
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-
