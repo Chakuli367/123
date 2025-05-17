@@ -1,19 +1,18 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from openai import OpenAI
+import openai
+import os
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all origins (adjust for security as needed)
+CORS(app)  # Allow all origins
 
-# Initialize Groq OpenAI client with base URL and API key
-client = OpenAI(
-    api_key="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",
-    api_base="https://api.groq.com/openai/v1"
-)
+# Set your Groq credentials
+openai.api_key = os.environ.get("GROQ_API_KEY") or "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"
+openai.api_base = "https://api.groq.com/openai/v1"
 
 @app.route('/')
 def index():
-    return "Groq LLaMA 3 Backend is running."
+    return "✅ Groq LLaMA 3 Backend is running."
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -50,14 +49,14 @@ Personalized Day 1 Message:
 '''
 
     try:
-        response = client.chat.completions.create(
-            model="llama3-8b-8192",
+        response = openai.ChatCompletion.create(
+            model="llama3-8b-8192",  # or llama3-70b-8192 if you want
             messages=[{"role": "user", "content": instructions}],
             temperature=0.3,
-            max_tokens=250
+            max_tokens=300
         )
 
-        ai_output = response.choices[0].message.content.strip()
+        ai_output = response['choices'][0]['message']['content'].strip()
         return jsonify({"response": ai_output})
 
     except Exception as e:
@@ -65,3 +64,4 @@ Personalized Day 1 Message:
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8888)
+
