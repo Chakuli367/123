@@ -38,72 +38,60 @@ Compliment: {compliment}
 Curiosity: {curiosity}
 """
 
-    prompt = f'''
-You are a personal development author creating a customized workbook page for someone starting their self-growth journey.
-
-The lesson should teach Dale Carnegie’s principle: **“Become Genuinely Interested in Others”**, but it must be written as if it’s tailor-made for the user’s specific situation.
-
-Use this structure:
-
----
-
+    prompt = f"""
 **Day 1 – Become Genuinely Interested in {person_name}**  
 _Principle: Show genuine interest in people._
 
 ---
 
-**Definitions of User Input:**
-- **Person**: The name of the person the user will interact with today. They matter to the user’s growth.
-- **Relationship**: What this person is to the user (e.g. friend, mentor, client, crush).
-- **Goal for interaction**: What the user wants to achieve with this interaction (e.g. connect better, build trust, get advice, make them feel appreciated).
-- **Compliment**: A specific quality the user genuinely admires in this person.
-- **Curiosity**: Something the user is truly interested in learning about this person.
-
----
-
-**Your task:**
-Write a full motivational Day 1 lesson in the tone of a self-help book — warm, clear, practical, and emotionally resonant. Use the user’s context to make every part feel custom-written for them.
-
-Use these **exact sections in this order**, each deeply personalized:
-
-Day 1 – Become Genuinely Interested in Others  
-Principle: Show genuine interest in people.
-
-**Action Plan:**  
-Ask about their day — listen actively, don’t interrupt.  
-Remember and use name at least once in the convo.  
-Compliment someone on something you admire — like “their energy“.  
-Write down the names and one thing you learned about each person.
-
-**Why Show Sincere Interest?**  
-In a noisy world, sincere interest is rare — and powerful. It tells people, “You matter.” When you listen deeply and care about what excites others, you build trust and make them feel seen.
-
-This opens doors, creates loyalty, and makes you truly unforgettable. People remember how you make them feel, and genuine interest builds a connection that lasts.
-
-**Warren Buffett’s Secret? Genuine Appreciation.**  
-One of the world’s richest and most respected men, Warren Buffett credits much of his success not just to numbers, but to people. He’s known for writing heartfelt letters of praise to employees, remembering birthdays, and recognizing unsung heroes.
-
-His philosophy? “Praise by name, criticize by category.” He understood what Dale Carnegie taught — when you make others feel important, sincerely, you win hearts and loyalty forever.
-
-**What Happens If You Don’t Show Sincere Interest?**  
-When you fail to show genuine interest in others, people can sense it. They might feel ignored, unappreciated, or undervalued.
-
-Without genuine interest, relationships can become shallow and distant. People are less likely to trust you or open up, which can hurt both personal and professional connections.
-
-In the long run, not showing sincere interest might lead to missed opportunities, lost friendships, and a reputation of being self-centered or indifferent. BELIEVE ME YOU DON’T WANT TO BE LEFT ALONE
-
----
-
-Now, using this context:
-
+**Definitions of User Input:**  
 - **Person**: {person_name}  
 - **Relationship**: {relationship}  
 - **Goal for interaction**: {interaction_goal}  
 - **Compliment**: {compliment}  
 - **Curiosity**: {curiosity}  
 
-Write the full Day 1 entry.
-'''
+---
+
+**Day 1 – Become Genuinely Interested in Others**  
+_Principle: Show genuine interest in people._
+
+**Action Plan:**  
+Today, you’ll focus on {person_name}, your {relationship}. Your mission? Be *present*.  
+Ask {person_name} how their day is going and really *listen* — no interruptions, no distractions.  
+Use their name at least once during the conversation to build warmth and connection.  
+Make sure to genuinely compliment them on something you admire — like how {compliment}.  
+Then, ask about something you’re curious about — for example, {curiosity}.  
+
+End the day by writing down what you learned about {person_name}. Let that learning deepen your connection tomorrow.
+
+**Why Show Sincere Interest?**  
+{person_name} is more than just a {relationship} — they’re someone who can help shape your growth.  
+By showing true curiosity and appreciation, you’re saying: “You matter to me.”  
+When someone feels seen and valued, they open up. That opens doors — to trust, to deeper bonds, and to unexpected growth.  
+
+Sincere interest in {person_name} will leave a mark. They’ll remember how you made them feel, and in return, they may begin to see you as someone they truly *want* to be around.
+
+**Warren Buffett’s Secret? Genuine Appreciation.**  
+Even one of the richest men on Earth built his legacy through relationships, not just business savvy.  
+Warren Buffett made it a point to express appreciation, write praise-filled letters, and remember the little things.  
+Like Carnegie, he understood the magic of making people feel significant.  
+
+When you compliment {person_name} on how {compliment}, you’re tapping into that same power.  
+You’re building something real — and that’s worth more than any transaction.
+
+**What Happens If You Don’t Show Sincere Interest?**  
+Imagine if {person_name} walks away from today feeling unseen.  
+They might feel like your {relationship} label is just surface-level. That stings — and it distances people.  
+Without genuine interest, the connection weakens. They may not trust you. They may not open up.  
+
+Over time, you risk being someone others simply tolerate — or worse, forget.  
+BELIEVE ME YOU DON’T WANT TO BE LEFT ALONE.  
+So today, take the leap. Make {person_name} feel important, for real.  
+Because your journey toward self-growth starts not with yourself — but with how you treat others.
+
+"""
+
 
     try:
         response = client.chat.completions.create(
