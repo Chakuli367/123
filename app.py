@@ -90,6 +90,11 @@ BELIEVE ME YOU DON’T WANT TO BE LEFT ALONE.
 So today, take the leap. Make {person_name} feel important, for real.  
 Because your journey toward self-growth starts not with yourself — but with how you treat others.
 
+---
+
+Now use the above text of Day 1 as format and create a similar  CUSTOMIZED lesson for the user and RETURN ONLY THE NEWLY CUSTOMIZED LESSON FOR THE USER
+
+
 """
 
 
