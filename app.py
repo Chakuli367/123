@@ -38,13 +38,33 @@ Compliment: {compliment}
 Curiosity: {curiosity}
 """
 
-    prompt = f'''
-You are a personal development coach. The following text is Day 1 of a user's self-improvement journey based on the principle of "Become Genuinely Interested in Others." Your task is to personalize the message, focusing on the user's specific context and interaction goals. Make the message feel human, warm, and practical — motivating them to take authentic action during their interaction with this person.
+   prompt = f'''
+You are a personal development author creating a customized workbook page for someone starting their self-growth journey.
 
-Here is the base text for Day 1:
+The lesson should teach Dale Carnegie’s principle: **“Become Genuinely Interested in Others”**, but it must be written as if it’s tailor-made for the user’s specific situation.
+
+Use this structure:
 
 ---
 
+**Day 1 – Become Genuinely Interested in [Person's Name]**  
+_Principle: Show genuine interest in people._
+
+---
+
+**Definitions of User Input:**
+- **Person**: The name of the person the user will interact with today. They matter to the user’s growth.
+- **Relationship**: What this person is to the user (e.g. friend, mentor, client, crush).
+- **Goal for interaction**: What the user wants to achieve with this interaction (e.g. connect better, build trust, get advice, make them feel appreciated).
+- **Compliment**: A specific quality the user genuinely admires in this person.
+- **Curiosity**: Something the user is truly interested in learning about this person.
+
+---
+
+**Your task:**
+Write a full motivational Day 1 lesson in the tone of a self-help book — warm, clear, practical, and emotionally resonant. Use the user’s context to make every part feel custom-written for them.
+
+Use these **exact sections in this order**, each deeply personalized:
 Day 1 – Become Genuinely Interested in Others
 Principle: Show genuine interest in people.
 
@@ -74,11 +94,17 @@ Without genuine interest, relationships can become shallow and distant. People a
 In the long run, not showing sincere interest might lead to missed opportunities, lost friendships, and a reputation of being self-centered or indifferent. BELIEVE ME YOU DON’T WANT TO BE LEFT ALONE
 ---
 
-User's Context:
-{user_context}
+Now, using this context:
 
-Personalized Day 1 Message:
+- **Person**: {person_name}  
+- **Relationship**: {relationship}  
+- **Goal for interaction**: {interaction_goal}  
+- **Compliment**: {compliment}  
+- **Curiosity**: {curiosity}  
+
+Write the full Day 1 entry.
 '''
+
 
     try:
         response = client.chat.completions.create(
