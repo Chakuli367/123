@@ -6,3 +6,4 @@ ollama
 transformers 
 torch
 openai
+python-dotenv
