@@ -24,13 +24,13 @@ def index():
 def handle_form():
     data = request.get_json()
 
-    person_name = data.get("person_name", "")
-    relationship = data.get("relationship", "")
-    interaction_goal = data.get("interaction_goal", "")
-    compliment = data.get("compliment", "")
-    curiosity = data.get("curiosity", "")
+    goal_name = data.get("goal_name", "")
+    why_it_matters = data.get("why_it_matters", "")
+    current_obstacle = data.get("current_obstacle", "")
+    available_time = data.get("available_time", "")
+    desired_outcome = data.get("desired_outcome", "")
 
-    if not all([person_name, relationship, interaction_goal, compliment, curiosity]):
+    if not all([goal_name, why_it_matters, current_obstacle, available_time, desired_outcome]):
         return jsonify({"error": "Missing one or more fields"}), 400
 
     # Read prompt from external file
@@ -42,11 +42,11 @@ def handle_form():
 
     # Inject user inputs into the prompt
     prompt = prompt_template.format(
-        person_name=person_name,
-        relationship=relationship,
-        interaction_goal=interaction_goal,
-        compliment=compliment,
-        curiosity=curiosity
+        goal_name=goal_name,
+        why_it_matters=why_it_matters,
+        current_obstacle=current_obstacle,
+        available_time=available_time,
+        desired_outcome=desired_outcome
     )
 
     try:
