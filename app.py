@@ -16,49 +16,68 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
+def load_prompt(filename):
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return None
+
 @app.route('/')
 def index():
     return "✅ Groq LLaMA 3 Backend is running."
 
-@app.route('/submit', methods=['POST'])
-def handle_form():
+@app.route('/ask-questions', methods=['POST'])
+def ask_questions():
     data = request.get_json()
+    goal_name = data.get("goal_name", "").strip()
+    if not goal_name:
+        return jsonify({"error": "Missing goal_name"}), 400
 
-    goal_name = data.get("goal_name", "")
-    why_it_matters = data.get("why_it_matters", "")
-    current_obstacle = data.get("current_obstacle", "")
-    available_time = data.get("available_time", "")
-    desired_outcome = data.get("desired_outcome", "")
+    prompt_template = load_prompt("prompt_questions.txt")
+    if not prompt_template:
+        return jsonify({"error": "prompt_questions.txt file not found"}), 500
 
-    if not all([goal_name, why_it_matters, current_obstacle, available_time, desired_outcome]):
-        return jsonify({"error": "Missing one or more fields"}), 400
-
-    # Read prompt from external file
-    try:
-        with open("prompt.txt", "r", encoding="utf-8") as f:
-            prompt_template = f.read()
-    except FileNotFoundError:
-        return jsonify({"error": "prompt.txt file not found"}), 500
-
-    # Inject user inputs into the prompt
-    prompt = prompt_template.format(
-        goal_name=goal_name,
-        why_it_matters=why_it_matters,
-        current_obstacle=current_obstacle,
-        available_time=available_time,
-        desired_outcome=desired_outcome
-    )
+    prompt = prompt_template.format(goal_name=goal_name)
 
     try:
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.3,
-            max_tokens=600
+            max_tokens=400
         )
 
         result = response.choices[0].message.content.strip()
-        return jsonify({"response": result})
+        return jsonify({"questions": result})
+
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+@app.route('/final-plan', methods=['POST'])
+def final_plan():
+    data = request.get_json()
+    goal_name = data.get("goal_name", "").strip()
+    user_answers = data.get("user_answers", "").strip()
+    if not goal_name or not user_answers:
+        return jsonify({"error": "Missing goal_name or user_answers"}), 400
+
+    prompt_template = load_prompt("prompt_plan.txt")
+    if not prompt_template:
+        return jsonify({"error": "prompt_plan.txt file not found"}), 500
+
+    prompt = prompt_template.format(goal_name=goal_name, user_answers=user_answers)
+
+    try:
+        response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3,
+            max_tokens=1200
+        )
+
+        result = response.choices[0].message.content.strip()
+        return jsonify({"plan": result})
 
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
