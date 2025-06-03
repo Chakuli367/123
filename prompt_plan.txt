@@ -43,7 +43,7 @@ Now generate and return the final action plan using this HTML timeline format:
 </div>
 
 <style>
-  .timeline {
+  .timeline {{
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -52,28 +52,27 @@ Now generate and return the final action plan using this HTML timeline format:
     background: #f9f9f9;
     border-radius: 8px;
     border-left: 4px solid #4caf50;
-  }
+  }}
 
-  .timeline-step {
+  .timeline-step {{
     background: #fff;
     padding: 1rem 1.25rem;
     border-left: 3px solid #2196f3;
     box-shadow: 0 2px 4px rgba(0,0,0,0.06);
     border-radius: 4px;
-  }
+  }}
 
-  .timeline-step h3 {
+  .timeline-step h3 {{
     margin: 0 0 0.5rem;
     font-size: 1.1rem;
     color: #333;
-  }
+  }}
 
-  .timeline-step p {
+  .timeline-step p {{
     margin: 0;
     font-size: 0.95rem;
     color: #555;
     line-height: 1.4;
-  }
+  }}
 </style>
 <!-- END TIMELINE -->
-
