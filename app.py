@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Groq API key setup from environment variable
+# Groq API client using environment variable
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
@@ -31,6 +31,7 @@ def index():
 def ask_questions():
     data = request.get_json()
     goal_name = data.get("goal_name", "").strip()
+
     if not goal_name:
         return jsonify({"error": "Missing goal_name"}), 400
 
@@ -58,15 +59,21 @@ def ask_questions():
 def final_plan():
     data = request.get_json()
     goal_name = data.get("goal_name", "").strip()
-    user_answers = data.get("user_answers", "").strip()
-    if not goal_name or not user_answers:
-        return jsonify({"error": "Missing goal_name or user_answers"}), 400
+    user_answers = data.get("user_answers", [])
+
+    if not goal_name or not isinstance(user_answers, list):
+        return jsonify({"error": "Missing or invalid goal_name or user_answers"}), 400
+
+    # Convert list of answers into a formatted string
+    formatted_answers = "\n".join(
+        [f"{i+1}. {answer.strip()}" for i, answer in enumerate(user_answers) if isinstance(answer, str)]
+    )
 
     prompt_template = load_prompt("prompt_plan.txt")
     if not prompt_template:
         return jsonify({"error": "prompt_plan.txt file not found"}), 500
 
-    prompt = prompt_template.format(goal_name=goal_name, user_answers=user_answers)
+    prompt = prompt_template.format(goal_name=goal_name, user_answers=formatted_answers)
 
     try:
         response = client.chat.completions.create(
@@ -85,3 +92,4 @@ def final_plan():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
