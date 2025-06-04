@@ -1,4 +1,4 @@
-You are an expert goal coach, strategist, and frontend developer.
+You are an expert goal coach, strategist, and frontend developer. 
 
 Your task is to:
 1. Create a comprehensive, step-by-step action plan to help the user achieve their goal.
@@ -22,64 +22,29 @@ Your goal:
 ---
 
 The user wants to achieve this goal:  
-**{goal_name}**
+**<<goal_name>>**
 
 Here are the user’s answers to the important questions you asked:  
-**{user_answers}**
+**<<user_answers>>**
 
 Now generate and return the final action plan using this HTML timeline format:
 
 <!-- BEGIN TIMELINE -->
-You are an expert goal coach, strategist, and frontend developer.
-
-Your task is to:
-1. Create a comprehensive, step-by-step action plan to help the user achieve their goal.
-2. Clearly LABEL each step with a short, descriptive title.
-3. Format the entire plan in clean, structured HTML using the provided timeline structure.
-4. RETURN ONLY the HTML block — no extra commentary, intro, or notes.
-
-Each step must:
-- Have a label (e.g. "Build a Daily Habit")
-- Include a clear, supportive explanation
-- Be personalized to the user's answers
-- Suggest daily/weekly habits or tasks
-- Address possible obstacles + ways to overcome them
-- Include motivation and encouragement
-
-Your goal:
-✅ Be concise but thorough  
-✅ Make it friendly and encouraging  
-✅ Keep it directly usable on a webpage
-
----
-
-The user wants to achieve this goal:  
-**{goal_name}**
-
-Here are the user’s answers to the important questions you asked:  
-**{user_answers}**
-
-Now generate and return the final action plan using this HTML timeline format:
-
-<!-- BEGIN TIMELINE -->
-<!-- Google Font link -->
-<link href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap" rel="stylesheet" />
-
 <style>
-  html, body {{
+  html, body {
     margin: 0; padding: 0;
     scroll-behavior: smooth;
     background: #fefae0;
     font-family: 'Vollkorn', serif;
-  }}
+  }
 
-  .book-container {{
+  .book-container {
     scroll-snap-type: y mandatory;
     overflow-y: scroll;
     height: 100vh;
-  }}
+  }
 
-  section {{
+  section {
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -94,41 +59,41 @@ Now generate and return the final action plan using this HTML timeline format:
     position: relative;
     max-width: 700px;
     margin: 0 auto;
-  }}
+  }
 
-  section:nth-child(odd) {{
+  section:nth-child(odd) {
     background-color: #fff8dc;
-  }}
+  }
 
-  section:nth-child(even) {{
+  section:nth-child(even) {
     background-color: #fefae0;
-  }}
+  }
 
-  h1, h2 {{
+  h1, h2 {
     margin: 0 0 1rem 0;
     text-align: center;
-  }}
+  }
 
-  h1 {{
+  h1 {
     font-size: 2.5rem;
     color: #5e412f;
-  }}
+  }
 
-  h2 {{
+  h2 {
     font-size: 2rem;
     border-bottom: 2px solid #deb887;
     padding-bottom: 0.5rem;
-  }}
+  }
 
-  p {{
+  p {
     font-size: 1.3rem;
     max-width: 700px;
     text-align: center;
     line-height: 1.8;
     margin-bottom: 2rem;
-  }}
+  }
 
-  .charts-container {{
+  .charts-container {
     display: flex;
     justify-content: center;
     gap: 60px;
@@ -136,24 +101,27 @@ Now generate and return the final action plan using this HTML timeline format:
     width: 100%;
     max-width: 700px;
     margin-top: auto;
-  }}
+  }
 
-  canvas {{
+  .bar-chart, .pie-chart {
+    width: 180px;
+    height: 180px;
     background: #fff6d6;
     border: 1.5px solid #deb887;
     border-radius: 8px;
     box-shadow: 3px 3px 8px rgba(165,124,43,0.4);
-  }}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #a57c2b;
+    font-size: 1.2rem;
+  }
 
-  .bar-chart {{
-    width: 350px !important;
-    height: 200px !important;
-  }}
-
-  .pie-chart {{
-    width: 180px !important;
-    height: 180px !important;
-  }}
+  .bar-chart {
+    width: 350px;
+    height: 200px;
+  }
 </style>
 
 <div class="book-container">
@@ -161,159 +129,55 @@ Now generate and return the final action plan using this HTML timeline format:
     <h1>📘 Your Goal Journey</h1>
     <p>Scroll to begin your story...</p>
     <div class="charts-container">
-      <canvas id="barChart0" class="bar-chart"></canvas>
-      <canvas id="pieChart0" class="pie-chart"></canvas>
+      <div class="bar-chart">Bar Chart 0 Placeholder</div>
+      <div class="pie-chart">Pie Chart 0 Placeholder</div>
     </div>
   </section>
 
   <section>
     <h2>Step 1: Define Your Goal</h2>
-    <p>I want to build deep and meaningful friendships by being more intentional in conversations.</p>
+    <p>/* Insert personalized text based on goal and user answers here */</p>
     <div class="charts-container">
-      <canvas id="barChart1" class="bar-chart"></canvas>
-      <canvas id="pieChart1" class="pie-chart"></canvas>
+      <div class="bar-chart">Bar Chart 1 Placeholder</div>
+      <div class="pie-chart">Pie Chart 1 Placeholder</div>
     </div>
   </section>
 
   <section>
     <h2>Step 2: Understand the Why</h2>
-    <p>Having strong friendships will make me feel supported, understood, and confident socially.</p>
+    <p>/* Insert personalized text based on goal and user answers here */</p>
     <div class="charts-container">
-      <canvas id="barChart2" class="bar-chart"></canvas>
-      <canvas id="pieChart2" class="pie-chart"></canvas>
+      <div class="bar-chart">Bar Chart 2 Placeholder</div>
+      <div class="pie-chart">Pie Chart 2 Placeholder</div>
     </div>
   </section>
 
   <section>
     <h2>Step 3: Action Plan</h2>
-    <p>Start one meaningful conversation every day, focusing on asking questions and remembering key details. Write them down afterward to reflect.</p>
+    <p>/* Insert personalized text based on goal and user answers here */</p>
     <div class="charts-container">
-      <canvas id="barChart3" class="bar-chart"></canvas>
-      <canvas id="pieChart3" class="pie-chart"></canvas>
+      <div class="bar-chart">Bar Chart 3 Placeholder</div>
+      <div class="pie-chart">Pie Chart 3 Placeholder</div>
     </div>
   </section>
 
   <section>
     <h2>Step 4: Check-in Points</h2>
-    <p>End of each week, review your journal. Celebrate conversations that went well and identify one area to improve next week.</p>
+    <p>/* Insert personalized text based on goal and user answers here */</p>
     <div class="charts-container">
-      <canvas id="barChart4" class="bar-chart"></canvas>
-      <canvas id="pieChart4" class="pie-chart"></canvas>
+      <div class="bar-chart">Bar Chart 4 Placeholder</div>
+      <div class="pie-chart">Pie Chart 4 Placeholder</div>
     </div>
   </section>
 
   <section>
     <h2>Step 5: Final Reflection</h2>
-    <p>Look back after one month and write a summary of what you’ve learned about yourself and others. How have your relationships improved?</p>
+    <p>/* Insert personalized text based on goal and user answers here */</p>
     <div class="charts-container">
-      <canvas id="barChart5" class="bar-chart"></canvas>
-      <canvas id="pieChart5" class="pie-chart"></canvas>
+      <div class="bar-chart">Bar Chart 5 Placeholder</div>
+      <div class="pie-chart">Pie Chart 5 Placeholder</div>
     </div>
   </section>
 </div>
-
-<!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-  const barDataSets = [
-    [40], 
-    [40, 55], 
-    [35, 55, 50], 
-    [45, 60, 50, 40], 
-    [40, 65, 55, 35, 45], 
-    [50, 60, 55, 40, 45, 35]
-  ];
-
-  const pieDataSets = [
-    [40, 30, 30],
-    [50, 20, 30],
-    [25, 50, 25],
-    [40, 40, 20],
-    [35, 40, 25],
-    [30, 40, 30],
-  ];
-
-  const barColors = '#a57c2b';
-  const pieColors = ['#a57c2b', '#deb887', '#f5deb3'];
-
-  function createBarChart(ctx, data) {{
-    return new Chart(ctx, {{
-      type: 'bar',
-      data: {{
-        labels: data.map((_, i) => `Bar ${{i+1}}`),
-        datasets: [{{
-          label: 'Progress',
-          data: data,
-          backgroundColor: barColors,
-          borderRadius: 4,
-          maxBarThickness: 40,
-        }}]
-      }},
-      options: {{
-        responsive: true,
-        animation: {{ duration: 800, easing: 'easeOutQuart' }},
-        scales: {{
-          y: {{
-            beginAtZero: true,
-            max: 100,
-            ticks: {{ stepSize: 20 }}
-          }},
-          x: {{
-            grid: {{ display: false }}
-          }}
-        }},
-        plugins: {{
-          legend: {{ display: false }},
-          tooltip: {{
-            callbacks: {{
-              label: ctx => ctx.parsed.y + '%'
-            }}
-          }}
-        }}
-      }}
-    }});
-  }}
-
-  function createPieChart(ctx, data) {{
-    return new Chart(ctx, {{
-      type: 'pie',
-      data: {{
-        labels: ['A', 'B', 'C'],
-        datasets: [{{
-          data: data,
-          backgroundColor: pieColors,
-          hoverOffset: 20
-        }}]
-      }},
-      options: {{
-        responsive: true,
-        animation: {{ duration: 1000 }},
-        plugins: {{
-          legend: {{
-            position: 'bottom',
-            labels: {{
-              color: '#5e412f',
-              font: {{ size: 14, weight: 'bold' }}
-            }}
-          }}
-        }}
-      }}
-    }});
-  }}
-
-  window.onload = () => {{
-    for(let i=0; i<barDataSets.length; i++) {{
-      const barCtx = document.getElementById(`barChart${{i}}`).getContext('2d');
-      createBarChart(barCtx, barDataSets[i]);
-
-      const pieCtx = document.getElementById(`pieChart${{i}}`).getContext('2d');
-      createPieChart(pieCtx, pieDataSets[i]);
-    }}
-  }}
-</script>
-
-<!-- END TIMELINE -->
-
 
 <!-- END TIMELINE -->
