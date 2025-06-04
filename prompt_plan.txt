@@ -30,131 +30,256 @@ Here are the user’s answers to the important questions you asked:
 Now generate and return the final action plan using this HTML timeline format:
 
 <!-- BEGIN TIMELINE -->
-<div style="font-family: 'Vollkorn', serif; background: #fefae0; scroll-behavior: smooth;">
-  <style>
-    .book-container {{
-      scroll-snap-type: y mandatory;
-      overflow-y: scroll;
-      height: 100vh;
-    }}
+<!-- Google Font link -->
+<link href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap" rel="stylesheet" />
 
-    .section {{
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem;
-      box-sizing: border-box;
-      border-top: 1px dashed #c2a671;
-      background: linear-gradient(to bottom right, #fffaf1, #fdf6e3);
-      color: #4b3e2b;
-      scroll-snap-align: start;
-      position: relative;
-    }}
+<style>
+  html, body {{
+    margin: 0; padding: 0;
+    scroll-behavior: smooth;
+    background: #fefae0;
+    font-family: 'Vollkorn', serif;
+  }}
 
-    .section:nth-child(odd) {{ background-color: #fff8dc; }}
-    .section:nth-child(even) {{ background-color: #fefae0; }}
+  .book-container {{
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+  }}
 
-    .bar-graph {{
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 2rem;
-      height: 100px;
-    }}
+  section {{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    border-top: 1px dashed #c2a671;
+    background: linear-gradient(to bottom right, #fffaf1, #fdf6e3);
+    color: #4b3e2b;
+    scroll-snap-align: start;
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+  }}
 
-    .bar {{
-      width: 20px;
-      background-color: #c08457;
-      border-radius: 5px 5px 0 0;
-    }}
+  section:nth-child(odd) {{
+    background-color: #fff8dc;
+  }}
 
-    .img-section {{
-      margin-top: 1rem;
-      width: 150px;
-    }}
+  section:nth-child(even) {{
+    background-color: #fefae0;
+  }}
 
-    h1, h2 {{
-      margin: 0 0 1rem 0;
-      text-align: center;
-    }}
+  h1, h2 {{
+    margin: 0 0 1rem 0;
+    text-align: center;
+  }}
 
-    h1 {{ font-size: 2.5rem; color: #5e412f; }}
-    h2 {{ font-size: 2rem; border-bottom: 2px solid #deb887; padding-bottom: 0.5rem; }}
-    p {{ font-size: 1.3rem; max-width: 700px; text-align: center; line-height: 1.8; }}
-  </style>
+  h1 {{
+    font-size: 2.5rem;
+    color: #5e412f;
+  }}
 
-  <div class="book-container">
-    <div class="section">
-      <h1>📘 Your Goal Journey</h1>
-      <p>Scroll to begin your story...</p>
-      <div class="bar-graph">
-        <div class="bar" style="height: 20px;"></div>
-      </div>
+  h2 {{
+    font-size: 2rem;
+    border-bottom: 2px solid #deb887;
+    padding-bottom: 0.5rem;
+  }}
+
+  p {{
+    font-size: 1.3rem;
+    max-width: 700px;
+    text-align: center;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }}
+
+  .charts-container {{
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 700px;
+    margin-top: auto;
+  }}
+
+  canvas {{
+    background: #fff6d6;
+    border: 1.5px solid #deb887;
+    border-radius: 8px;
+    box-shadow: 3px 3px 8px rgba(165,124,43,0.4);
+  }}
+
+  .bar-chart {{
+    width: 350px !important;
+    height: 200px !important;
+  }}
+
+  .pie-chart {{
+    width: 180px !important;
+    height: 180px !important;
+  }}
+</style>
+
+<div class="book-container">
+  <section>
+    <h1>📘 Your Goal Journey</h1>
+    <p>Scroll to begin your story...</p>
+    <div class="charts-container">
+      <canvas id="barChart0" class="bar-chart"></canvas>
+      <canvas id="pieChart0" class="pie-chart"></canvas>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Step 1: Define Your Goal</h2>
-      <p>I want to build deep and meaningful friendships by being more intentional in conversations.</p>
-      <img class="img-section" src="https://cdn-icons-png.flaticon.com/512/4359/4359757.png" alt="Goal Icon" />
-      <div class="bar-graph">
-        <div class="bar" style="height: 20px;"></div>
-        <div class="bar" style="height: 40px;"></div>
-      </div>
+  <section>
+    <h2>Step 1: Define Your Goal</h2>
+    <p>I want to build deep and meaningful friendships by being more intentional in conversations.</p>
+    <div class="charts-container">
+      <canvas id="barChart1" class="bar-chart"></canvas>
+      <canvas id="pieChart1" class="pie-chart"></canvas>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Step 2: Understand the Why</h2>
-      <p>Having strong friendships will make me feel supported, understood, and confident socially.</p>
-      <img class="img-section" src="https://cdn-icons-png.flaticon.com/512/869/869636.png" alt="Why Icon" />
-      <div class="bar-graph">
-        <div class="bar" style="height: 20px;"></div>
-        <div class="bar" style="height: 40px;"></div>
-        <div class="bar" style="height: 60px;"></div>
-      </div>
+  <section>
+    <h2>Step 2: Understand the Why</h2>
+    <p>Having strong friendships will make me feel supported, understood, and confident socially.</p>
+    <div class="charts-container">
+      <canvas id="barChart2" class="bar-chart"></canvas>
+      <canvas id="pieChart2" class="pie-chart"></canvas>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Step 3: Action Plan</h2>
-      <p>Start one meaningful conversation every day. Ask good questions, listen closely, and reflect afterward.</p>
-      <img class="img-section" src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Plan Icon" />
-      <div class="bar-graph">
-        <div class="bar" style="height: 20px;"></div>
-        <div class="bar" style="height: 40px;"></div>
-        <div class="bar" style="height: 60px;"></div>
-        <div class="bar" style="height: 80px;"></div>
-      </div>
+  <section>
+    <h2>Step 3: Action Plan</h2>
+    <p>Start one meaningful conversation every day, focusing on asking questions and remembering key details. Write them down afterward to reflect.</p>
+    <div class="charts-container">
+      <canvas id="barChart3" class="bar-chart"></canvas>
+      <canvas id="pieChart3" class="pie-chart"></canvas>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Step 4: Weekly Check-ins</h2>
-      <p>At the end of each week, review your notes. Celebrate what went well. Adjust based on what you learn.</p>
-      <img class="img-section" src="https://cdn-icons-png.flaticon.com/512/1907/1907544.png" alt="Review Icon" />
-      <div class="bar-graph">
-        <div class="bar" style="height: 20px;"></div>
-        <div class="bar" style="height: 40px;"></div>
-        <div class="bar" style="height: 60px;"></div>
-        <div class="bar" style="height: 80px;"></div>
-        <div class="bar" style="height: 100px;"></div>
-      </div>
+  <section>
+    <h2>Step 4: Check-in Points</h2>
+    <p>End of each week, review your journal. Celebrate conversations that went well and identify one area to improve next week.</p>
+    <div class="charts-container">
+      <canvas id="barChart4" class="bar-chart"></canvas>
+      <canvas id="pieChart4" class="pie-chart"></canvas>
     </div>
+  </section>
 
-    <div class="section">
-      <h2>Step 5: Final Reflection</h2>
-      <p>After one month, reflect deeply. What has changed in you? Who do you feel closer to? What are you proud of?</p>
-      <img class="img-section" src="https://cdn-icons-png.flaticon.com/512/4201/4201973.png" alt="Reflection Icon" />
-      <div class="bar-graph">
-        <div class="bar" style="height: 20px;"></div>
-        <div class="bar" style="height: 40px;"></div>
-        <div class="bar" style="height: 60px;"></div>
-        <div class="bar" style="height: 80px;"></div>
-        <div class="bar" style="height: 100px;"></div>
-        <div class="bar" style="height: 120px;"></div>
-      </div>
+  <section>
+    <h2>Step 5: Final Reflection</h2>
+    <p>Look back after one month and write a summary of what you’ve learned about yourself and others. How have your relationships improved?</p>
+    <div class="charts-container">
+      <canvas id="barChart5" class="bar-chart"></canvas>
+      <canvas id="pieChart5" class="pie-chart"></canvas>
     </div>
-  </div>
+  </section>
 </div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const barDataSets = [
+    [40], 
+    [40, 55], 
+    [35, 55, 50], 
+    [45, 60, 50, 40], 
+    [40, 65, 55, 35, 45], 
+    [50, 60, 55, 40, 45, 35]
+  ];
+
+  const pieDataSets = [
+    [40, 30, 30],
+    [50, 20, 30],
+    [25, 50, 25],
+    [40, 40, 20],
+    [35, 40, 25],
+    [30, 40, 30],
+  ];
+
+  const barColors = '#a57c2b';
+  const pieColors = ['#a57c2b', '#deb887', '#f5deb3'];
+
+  function createBarChart(ctx, data) {{
+    return new Chart(ctx, {{
+      type: 'bar',
+      data: {{
+        labels: data.map((_, i) => `Bar ${{i+1}}`),
+        datasets: [{{
+          label: 'Progress',
+          data: data,
+          backgroundColor: barColors,
+          borderRadius: 4,
+          maxBarThickness: 40,
+        }}]
+      }},
+      options: {{
+        responsive: true,
+        animation: {{ duration: 800, easing: 'easeOutQuart' }},
+        scales: {{
+          y: {{
+            beginAtZero: true,
+            max: 100,
+            ticks: {{ stepSize: 20 }}
+          }},
+          x: {{
+            grid: {{ display: false }}
+          }}
+        }},
+        plugins: {{
+          legend: {{ display: false }},
+          tooltip: {{
+            callbacks: {{
+              label: ctx => ctx.parsed.y + '%'
+            }}
+          }}
+        }}
+      }}
+    }});
+  }}
+
+  function createPieChart(ctx, data) {{
+    return new Chart(ctx, {{
+      type: 'pie',
+      data: {{
+        labels: ['A', 'B', 'C'],
+        datasets: [{{
+          data: data,
+          backgroundColor: pieColors,
+          hoverOffset: 20
+        }}]
+      }},
+      options: {{
+        responsive: true,
+        animation: {{ duration: 1000 }},
+        plugins: {{
+          legend: {{
+            position: 'bottom',
+            labels: {{
+              color: '#5e412f',
+              font: {{ size: 14, weight: 'bold' }}
+            }}
+          }}
+        }}
+      }}
+    }});
+  }}
+
+  window.onload = () => {{
+    for(let i=0; i<barDataSets.length; i++) {{
+      const barCtx = document.getElementById(`barChart${i}`).getContext('2d');
+      createBarChart(barCtx, barDataSets[i]);
+
+      const pieCtx = document.getElementById(`pieChart${i}`).getContext('2d');
+      createPieChart(pieCtx, pieDataSets[i]);
+    }}
+  }}
+</script>
+
 
 <!-- END TIMELINE -->
