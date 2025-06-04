@@ -30,6 +30,38 @@ Here are the user’s answers to the important questions you asked:
 Now generate and return the final action plan using this HTML timeline format:
 
 <!-- BEGIN TIMELINE -->
+You are an expert goal coach, strategist, and frontend developer.
+
+Your task is to:
+1. Create a comprehensive, step-by-step action plan to help the user achieve their goal.
+2. Clearly LABEL each step with a short, descriptive title.
+3. Format the entire plan in clean, structured HTML using the provided timeline structure.
+4. RETURN ONLY the HTML block — no extra commentary, intro, or notes.
+
+Each step must:
+- Have a label (e.g. "Build a Daily Habit")
+- Include a clear, supportive explanation
+- Be personalized to the user's answers
+- Suggest daily/weekly habits or tasks
+- Address possible obstacles + ways to overcome them
+- Include motivation and encouragement
+
+Your goal:
+✅ Be concise but thorough  
+✅ Make it friendly and encouraging  
+✅ Keep it directly usable on a webpage
+
+---
+
+The user wants to achieve this goal:  
+**{goal_name}**
+
+Here are the user’s answers to the important questions you asked:  
+**{user_answers}**
+
+Now generate and return the final action plan using this HTML timeline format:
+
+<!-- BEGIN TIMELINE -->
 <!-- Google Font link -->
 <link href="https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap" rel="stylesheet" />
 
@@ -272,14 +304,16 @@ Now generate and return the final action plan using this HTML timeline format:
 
   window.onload = () => {{
     for(let i=0; i<barDataSets.length; i++) {{
-      const barCtx = document.getElementById(`barChart${i}`).getContext('2d');
+      const barCtx = document.getElementById(`barChart${{i}}`).getContext('2d');
       createBarChart(barCtx, barDataSets[i]);
 
-      const pieCtx = document.getElementById(`pieChart${i}`).getContext('2d');
+      const pieCtx = document.getElementById(`pieChart${{i}}`).getContext('2d');
       createPieChart(pieCtx, pieDataSets[i]);
     }}
   }}
 </script>
+
+<!-- END TIMELINE -->
 
 
 <!-- END TIMELINE -->
