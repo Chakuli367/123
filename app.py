@@ -2,15 +2,16 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
 import os
+import json
+import ast
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Groq API client using environment variable
+# Groq API client
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
@@ -48,7 +49,6 @@ def ask_questions():
             temperature=0.3,
             max_tokens=400
         )
-
         result = response.choices[0].message.content.strip()
         return jsonify({"questions": result})
 
@@ -64,7 +64,6 @@ def final_plan():
     if not goal_name or not isinstance(user_answers, list):
         return jsonify({"error": "Missing or invalid goal_name or user_answers"}), 400
 
-    # Convert list of answers into a formatted string
     formatted_answers = "\n".join(
         [f"{i+1}. {answer.strip()}" for i, answer in enumerate(user_answers) if isinstance(answer, str)]
     )
@@ -79,12 +78,22 @@ def final_plan():
         response = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,
-            max_tokens=1200
+            temperature=0.4,
+            max_tokens=1600
         )
 
         result = response.choices[0].message.content.strip()
-        return jsonify({"plan": result})
+
+        # Try parsing as JSON first, fallback to Python-safe eval
+        try:
+            parsed_plan = json.loads(result)
+        except json.JSONDecodeError:
+            try:
+                parsed_plan = ast.literal_eval(result)
+            except Exception as fallback_error:
+                return jsonify({"error": f"Failed to parse plan: {str(fallback_error)}"}), 500
+
+        return jsonify({"plan": parsed_plan})
 
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
@@ -92,4 +101,3 @@ def final_plan():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
