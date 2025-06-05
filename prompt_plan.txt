@@ -1,4 +1,3 @@
-
 You are an expert goal coach, course creator, and strategist.
 
 Your task is to design a structured 5-day lesson plan that helps a user work toward a personal goal. The plan should be divided into daily lessons, similar to how a course would be organized in LifterLMS.
@@ -18,8 +17,8 @@ Each step must:
 - Address possible obstacles + ways to overcome them
 - Include motivation and encouragement
 
-
 Format the full response as a JSON list with 5 entries like this:
+
 [
   {
     "day": "Day 1",
@@ -39,4 +38,5 @@ To better tailor the plan, here is the background and context the user provided 
 → 
 <<user_answers>>
 
-Please generate a warm, thoughtful, and strategic plan for this person based on the above.
+IMPORTANT: Output ONLY valid JSON. Use double quotes for all strings. Do NOT include any text, commentary, or explanation outside the JSON list. Make sure there are no trailing commas or syntax errors. This JSON will be parsed programmatically.
+
