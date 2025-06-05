@@ -72,7 +72,8 @@ def final_plan():
     if not prompt_template:
         return jsonify({"error": "prompt_plan.txt file not found"}), 500
 
-    prompt = prompt_template.format(goal_name=goal_name, user_answers=formatted_answers)
+    prompt = prompt_template.replace("<<goal_name>>", goal_name).replace("<<user_answers>>", formatted_answers)
+
 
     try:
         response = client.chat.completions.create(
