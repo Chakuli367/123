@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify 
 from flask_cors import CORS
 from openai import OpenAI
 import os
@@ -74,7 +74,6 @@ def final_plan():
 
     prompt = prompt_template.replace("<<goal_name>>", goal_name).replace("<<user_answers>>", formatted_answers)
 
-
     try:
         response = client.chat.completions.create(
             model="llama3-8b-8192",
@@ -88,11 +87,17 @@ def final_plan():
         # Try parsing as JSON first, fallback to Python-safe eval
         try:
             parsed_plan = json.loads(result)
-        except json.JSONDecodeError:
-            try:
-                parsed_plan = ast.literal_eval(result)
-            except Exception as fallback_error:
-                return jsonify({"error": f"Failed to parse plan: {str(fallback_error)}"}), 500
+        except json.JSONDecodeError as json_err:
+            # Return raw AI output with error for debugging
+            return jsonify({
+                "error": f"Failed to parse plan as JSON: {str(json_err)}",
+                "raw_response": result
+            }), 500
+        except Exception as fallback_error:
+            return jsonify({
+                "error": f"Failed to parse plan: {str(fallback_error)}",
+                "raw_response": result
+            }), 500
 
         return jsonify({"plan": parsed_plan})
 
