@@ -1,20 +1,22 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify  
 from flask_cors import CORS
 from openai import OpenAI
+import os
+import json
 from dotenv import load_dotenv
-import os, json, datetime
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
+# Groq API client
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
 
-LOG_FILE = "logs.json"
+LOGS_FILE = "logs.json"
 
 def load_prompt(filename):
     try:
@@ -23,17 +25,17 @@ def load_prompt(filename):
     except FileNotFoundError:
         return None
 
-def save_log(entry):
-    logs = []
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, "r", encoding="utf-8") as f:
-            try:
-                logs = json.load(f)
-            except json.JSONDecodeError:
-                logs = []
+def read_logs():
+    if not os.path.exists(LOGS_FILE):
+        return []
+    with open(LOGS_FILE, "r", encoding="utf-8") as f:
+        try:
+            return json.load(f)
+        except json.JSONDecodeError:
+            return []
 
-    logs.append(entry)
-    with open(LOG_FILE, "w", encoding="utf-8") as f:
+def write_logs(logs):
+    with open(LOGS_FILE, "w", encoding="utf-8") as f:
         json.dump(logs, f, indent=2)
 
 @app.route('/')
@@ -72,12 +74,10 @@ def final_plan():
     data = request.get_json()
     goal_name = data.get("goal_name", "").strip()
     user_answers = data.get("user_answers", [])
-    avatar = data.get("avatar", "Unknown")
-    user_email = data.get("user_email", "anonymous@example.com")
-    label = data.get("label", f"Session-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}")
-
-    if not goal_name or not isinstance(user_answers, list):
-        return jsonify({"error": "Missing or invalid goal_name or user_answers"}), 400
+    user_email = data.get("user_email", "").strip()  # <-- user email passed from frontend (LifterLMS)
+    
+    if not goal_name or not isinstance(user_answers, list) or not user_email:
+        return jsonify({"error": "Missing or invalid goal_name, user_answers, or user_email"}), 400
 
     formatted_answers = "\n".join(
         [f"{i+1}. {answer.strip()}" for i, answer in enumerate(user_answers) if isinstance(answer, str)]
@@ -99,51 +99,49 @@ def final_plan():
 
         result = response.choices[0].message.content.strip()
 
+        # Try parsing as JSON first, fallback to Python-safe eval
         try:
             parsed_plan = json.loads(result)
-        except Exception:
+        except json.JSONDecodeError as json_err:
             return jsonify({
-                "error": "Failed to parse AI response as JSON",
+                "error": f"Failed to parse plan as JSON: {str(json_err)}",
+                "raw_response": result
+            }), 500
+        except Exception as fallback_error:
+            return jsonify({
+                "error": f"Failed to parse plan: {str(fallback_error)}",
                 "raw_response": result
             }), 500
 
-        log_entry = {
-            "timestamp": datetime.datetime.now().isoformat(),
+        # Save log entry
+        logs = read_logs()
+        logs.append({
             "user_email": user_email,
             "goal_name": goal_name,
-            "answers": user_answers,
-            "avatar": avatar,
-            "label": label,
-            "ai_response": parsed_plan
-        }
-        save_log(log_entry)
+            "user_answers": user_answers,
+            "ai_plan": parsed_plan
+        })
+        write_logs(logs)
 
         return jsonify({"plan": parsed_plan})
 
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
-@app.route('/view-logs', methods=['POST'])
-def view_logs():
+@app.route('/get-user-logs', methods=['POST'])
+def get_user_logs():
     data = request.get_json()
-    email = data.get("user", "").strip().lower()
+    user_email = data.get("user_email", "").strip()
 
-    if not email:
-        return jsonify({"error": "Missing user email"}), 400
+    if not user_email:
+        return jsonify({"error": "Missing user_email"}), 400
 
-    if not os.path.exists(LOG_FILE):
-        return jsonify({"logs": []})
-
-    with open(LOG_FILE, "r", encoding="utf-8") as f:
-        try:
-            logs = json.load(f)
-        except json.JSONDecodeError:
-            return jsonify({"logs": []})
-
-    user_logs = [log for log in logs if log.get("user_email", "").lower() == email]
+    logs = read_logs()
+    user_logs = [log for log in logs if log.get("user_email") == user_email]
 
     return jsonify({"logs": user_logs})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
