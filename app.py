@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify 
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
 import os
 import json
-import ast
+import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,7 +11,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Groq API client
+# Initialize Groq API client
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
@@ -23,6 +23,21 @@ def load_prompt(filename):
             return f.read()
     except FileNotFoundError:
         return None
+
+def save_user_data(goal_name, user_answers, user_info, ai_response):
+    log_entry = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "user": user_info,
+        "goal_name": goal_name,
+        "answers": user_answers,
+        "ai_response": ai_response
+    }
+
+    logs_path = "user_logs.json"
+
+    # Append to file (one JSON object per line)
+    with open(logs_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(log_entry) + "\n")
 
 @app.route('/')
 def index():
@@ -84,20 +99,20 @@ def final_plan():
 
         result = response.choices[0].message.content.strip()
 
-        # Try parsing as JSON first, fallback to Python-safe eval
+        # Try parsing as JSON
         try:
             parsed_plan = json.loads(result)
         except json.JSONDecodeError as json_err:
-            # Return raw AI output with error for debugging
             return jsonify({
                 "error": f"Failed to parse plan as JSON: {str(json_err)}",
                 "raw_response": result
             }), 500
-        except Exception as fallback_error:
-            return jsonify({
-                "error": f"Failed to parse plan: {str(fallback_error)}",
-                "raw_response": result
-            }), 500
+
+        # Get user info from headers (set this on frontend)
+        user_info = request.headers.get("X-User-Name", "Anonymous")
+
+        # Save everything to file
+        save_user_data(goal_name, user_answers, user_info, parsed_plan)
 
         return jsonify({"plan": parsed_plan})
 
