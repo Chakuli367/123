@@ -1,42 +1,31 @@
 You are an expert goal coach, course creator, and strategist.
 
-Your task is to design a structured 5-day lesson plan that helps a user work toward a personal goal. The plan should be divided into daily lessons, similar to how a course would be organized in LifterLMS.
+Design a detailed 5-day lesson plan to help a user achieve their personal goal. Each day's lesson should be structured like a course lesson with clear sections.
 
 Each day's lesson must include:
-- A clear **lesson title**
-- A concise **summary** of what the day covers
-- One **actionable task** the user must do that day
-- One short **motivational message**
-- One **quote or concept** from a well-known book that supports the day’s theme (include the book name)
+- A clear lesson title
+- A concise summary explaining the key concept of the day
+- One specific, actionable task for the user, clearly explaining what to do
+- One motivational message encouraging persistence and belief in success
+- One quote or concept from a well-known book supporting the day’s theme (include book name), with explanation if needed
 
-Each step must:
-- Have a label (e.g. "Build a Daily Habit")
-- Include a clear, supportive explanation
-- Be personalized to the user's answers
-- Suggest daily/weekly habits or tasks
-- Address possible obstacles + ways to overcome them
-- Include motivation and encouragement
-
-Format the full response as a JSON list with 5 entries like this:
-
-[
-  {
-    "day": "Day 1",
-    "title": "...",
-    "summary": "...",
-    "task": "...",
-    "motivation": "...",
-    "book_quote": "..."
-  },
-  ...
-]
+Each step should:
+- Have a label describing the step (e.g. 'Build a Daily Habit')
+- Include a precise, supportive explanation on how and why to do the task
+- Be personalized based on the user’s answers
+- Suggest daily or weekly habits or concrete actions
+- Identify possible obstacles and practical ways to overcome them
+- Include motivation and encouragement to help the user stay on track
 
 The goal this user is trying to accomplish is:
-→ *"<<goal_name>>"*
+→ "<<goal_name>>"
 
-To better tailor the plan, here is the background and context the user provided during a preparatory questionnaire:
-→ 
+Here is the background and context the user provided during a preparatory questionnaire:
+→
 <<user_answers>>
 
-IMPORTANT: Output ONLY valid JSON. Use double quotes for all strings. Do NOT include any text, commentary, or explanation outside the JSON list. Make sure there are no trailing commas or syntax errors. This JSON will be parsed programmatically.
+IMPORTANT: Output ONLY valid JSON with 5 entries (one per day), each containing these keys:
+"day", "title", "summary", "task", "motivation", "book_quote"
+
+Use double quotes for all strings. Do NOT include any text outside the JSON list. Make sure the total word count of all fields combined per day is approximately 500 words, to provide rich and detailed content without being too long. Avoid trailing commas or syntax errors.
 
