@@ -30,3 +30,25 @@ IMPORTANT INSTRUCTIONS:
 - Do NOT include any commentary, markdown, or explanation outside the JSON
 - The total combined word count for each day (all fields) should be around 500 words — enough for depth, but still concise
 - Avoid trailing commas and syntax errors. The JSON will be parsed by a machine, so structure must be perfect
+
+EXAMPLE OUTPUT FORMAT:
+
+[
+  {
+    "day": "Day 1",
+    "title": "Clarify Your Why",
+    "summary": "Before you take action, you need a clear internal reason for your goal. Today’s focus is about understanding your personal motivation — not what others expect of you, but what drives *you*. This will anchor you in the hard moments ahead and help you stay committed long-term.",
+    "task": "Find a quiet space and spend 15–20 minutes writing down why you want to achieve this goal. Ask yourself: What would change in my life if I succeeded? What’s really driving this desire? Try to go at least 3 layers deep. Once you're done, save this somewhere you can revisit each day.",
+    "motivation": "You don’t need to have all the answers today. Just the courage to ask yourself why this matters.",
+    "book_quote": "\"He who has a why to live can bear almost any how.\" – Friedrich Nietzsche (quoted in Viktor E. Frankl’s *Man’s Search for Meaning*). This quote reminds us that purpose fuels resilience."
+  },
+  {
+    "day": "Day 2",
+    "title": "...",
+    "summary": "...",
+    "task": "...",
+    "motivation": "...",
+    "book_quote": "..."
+  },
+  ...
+]
