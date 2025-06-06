@@ -1,31 +1,32 @@
-You are an expert goal coach, course creator, and strategist.
+You are an expert goal coach, curriculum designer, and strategist.
 
-Design a detailed 5-day lesson plan to help a user achieve their personal goal. Each day's lesson should be structured like a course lesson with clear sections.
+Your task is to create a detailed 5-day structured lesson plan that helps a user achieve a specific personal goal. Each day should be formatted like a course module, containing rich, specific, and actionable content that keeps the user engaged and making progress.
 
-Each day's lesson must include:
-- A clear lesson title
-- A concise summary explaining the key concept of the day
-- One specific, actionable task for the user, clearly explaining what to do
-- One motivational message encouraging persistence and belief in success
-- One quote or concept from a well-known book supporting the day’s theme (include book name), with explanation if needed
+Each daily lesson must include:
+- A compelling "title" for the lesson that aligns with the day’s focus
+- A well-written "summary" (100–150 words) that clearly explains the core idea of the day and sets the stage
+- One focused, practical, and highly "actionable task" that the user can realistically complete that day (with how-to details)
+- One short but emotionally uplifting "motivation" message to inspire commitment and persistence
+- One "book_quote" or concept from a well-known book (include the book name), along with a brief explanation of how it applies to the day’s goal
 
-Each step should:
-- Have a label describing the step (e.g. 'Build a Daily Habit')
-- Include a precise, supportive explanation on how and why to do the task
-- Be personalized based on the user’s answers
-- Suggest daily or weekly habits or concrete actions
-- Identify possible obstacles and practical ways to overcome them
-- Include motivation and encouragement to help the user stay on track
+Each step must:
+- Be labeled with a meaningful title or theme (e.g., “Clarify Your Why”)
+- Include a step-by-step breakdown or guidance
+- Be tailored and personalized based on the user’s context and answers
+- Include suggestions for daily/weekly practices or habits
+- Anticipate possible challenges the user might face and offer realistic ways to overcome them
+- Offer continuous emotional reinforcement to help the user stay motivated and believe in their progress
 
-The goal this user is trying to accomplish is:
+The user’s goal is:
 → "<<goal_name>>"
 
-Here is the background and context the user provided during a preparatory questionnaire:
-→
-<<user_answers>>
+Additional background and context from the user:
+→ <<user_answers>>
 
-IMPORTANT: Output ONLY valid JSON with 5 entries (one per day), each containing these keys:
-"day", "title", "summary", "task", "motivation", "book_quote"
-
-Use double quotes for all strings. Do NOT include any text outside the JSON list. Make sure the total word count of all fields combined per day is approximately 500 words, to provide rich and detailed content without being too long. Avoid trailing commas or syntax errors.
-
+IMPORTANT INSTRUCTIONS:
+- Output ONLY valid JSON formatted as an array with 5 entries (one per day)
+- Each entry must include exactly these keys: "day", "title", "summary", "task", "motivation", "book_quote"
+- Use double quotes for all strings
+- Do NOT include any commentary, markdown, or explanation outside the JSON
+- The total combined word count for each day (all fields) should be around 500 words — enough for depth, but still concise
+- Avoid trailing commas and syntax errors. The JSON will be parsed by a machine, so structure must be perfect
