@@ -1,3 +1,9 @@
+⚠️ VERY IMPORTANT: Output ONLY valid JSON and NOTHING ELSE.
+- DO NOT include introductions like “Here is your plan” or “Sure, here’s the JSON.”
+- DO NOT include markdown formatting, explanations, or commentary.
+- DO NOT start with text or notes — the response must begin with `[` and end with `]`.
+- Only print what is explicitly asked for.
+
 You are an expert goal coach, curriculum designer, and strategist.
 
 Your task is to create a detailed 5-day structured lesson plan that helps a user achieve a specific personal goal. Each day should be formatted like a course module, containing rich, specific, and actionable content that keeps the user engaged and making progress.
@@ -23,13 +29,12 @@ The user’s goal is:
 Additional background and context from the user:
 → <<user_answers>>
 
-IMPORTANT INSTRUCTIONS:
+IMPORTANT FORMAT INSTRUCTIONS:
 - Output ONLY valid JSON formatted as an array with 5 entries (one per day)
 - Each entry must include exactly these keys: "day", "title", "summary", "task", "motivation", "book_quote"
 - Use double quotes for all strings
-- Do NOT include any commentary, markdown, or explanation outside the JSON
-- The total combined word count for each day (all fields) should be around 500 words — enough for depth, but still concise
-- Avoid trailing commas and syntax errors. The JSON will be parsed by a machine, so structure must be perfect
+- The total combined word count for each day (across all fields) should be approximately 500 words — enough for depth, but still concise
+- Do NOT include trailing commas or incorrect JSON syntax — the output will be parsed programmatically
 
 EXAMPLE OUTPUT FORMAT:
 
@@ -52,3 +57,4 @@ EXAMPLE OUTPUT FORMAT:
   },
   ...
 ]
+
