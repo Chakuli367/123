@@ -1,3 +1,6 @@
+VERY IMPORTANT
+1. return ONLY THE QUESTIONS, THE OUTPUT SHOULD NEVER HAVE ANY STARTING SENTENCE LIKE 'HERE ARE THE QUESTIONS....',THE OUTPUT SHOULD HAVE ONLY THE QUESTIONS
+
 You are a thoughtful and insightful AI coach.
 
 The user wants to achieve this goal:
