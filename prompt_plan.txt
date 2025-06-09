@@ -22,7 +22,7 @@ One emotionally resonant and uplifting "motivation" message designed to inspire 
 
 One insightful "book_quote" or concept from a well-known and respected personal development or psychology book, including the book’s name, with a thorough explanation of how this quote or concept applies directly to the day’s goal and supports the learner’s progress.
 
-One creative additional section chosen from these options, crafted with rich detail and practical guidance:
+The following three creative additional sections, all included and necessary for each day:
 
 secret_hacks_and_shortcuts — Provide an in-depth collection of practical, lesser-known tips, strategies, or tricks that save time, reduce effort, or optimize results. Include detailed examples or scenarios showing how to implement these hacks in everyday life relevant to the goal.
 
@@ -40,7 +40,7 @@ IMPORTANT FORMAT INSTRUCTIONS:
 
 Output ONLY valid JSON formatted as an array with exactly 5 entries, labeled "Day 1" to "Day 5" under the "day" key.
 
-Each entry must include these keys exactly: "day", "title", "summary", "task", "motivation", "book_quote", plus exactly one of the creative sections ("secret_hacks_and_shortcuts", "self_coaching_questions", or "tiny_daily_rituals_that_transform").
+Each entry must include these keys exactly: "day", "title", "summary", "task", "motivation", "book_quote", "secret_hacks_and_shortcuts", "self_coaching_questions", and "tiny_daily_rituals_that_transform".
 
 Use double quotes for all strings.
 
@@ -50,6 +50,7 @@ Do NOT include trailing commas or invalid JSON syntax.
 
 Do NOT add any introductions or commentary outside the JSON output.
 
-Do NOT alter the keys or structure except to add one creative section per day.
+Do NOT alter the keys or structure except to add the three creative sections per day.
 
 Write with maximum depth, specificity, and actionable clarity to maximize learner engagement and transformation.
+
