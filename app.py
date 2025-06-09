@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify   
+from flask import Flask, request, jsonify    
 from flask_cors import CORS
 from openai import OpenAI
 import os
@@ -93,7 +93,7 @@ def final_plan():
             model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.4,
-            max_tokens=1600
+            max_tokens=7000  # Increased token limit here
         )
 
         result = response.choices[0].message.content.strip()
@@ -127,3 +127,4 @@ def get_all_logs():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
