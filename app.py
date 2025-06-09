@@ -40,7 +40,7 @@ def write_logs(logs):
 
 @app.route('/')
 def index():
-    return "✅ Groq LLaMA 3 Backend is running."
+    return "✅ Groq LLaMA 4 Scout Backend is running."
 
 @app.route('/ask-questions', methods=['POST'])
 def ask_questions():
@@ -58,7 +58,7 @@ def ask_questions():
 
     try:
         response = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.3,
             max_tokens=400
@@ -90,7 +90,7 @@ def final_plan():
 
     try:
         response = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.4,
             max_tokens=1600
