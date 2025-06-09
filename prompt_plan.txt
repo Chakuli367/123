@@ -1,7 +1,7 @@
-⚠️ VERY IMPORTANT: Output ONLY valid JSON and NOTHING ELSE.
+⚠️ VERY IMPORTANT: Output ONLY valid JSON and NOTHING ELSE. 
 - DO NOT include introductions like “Here is your plan” or “Sure, here’s the JSON.”
 - DO NOT include markdown formatting, explanations, or commentary.
-- DO NOT start with text or notes — the response must begin with `[` and end with `]`.
+- DO NOT start with text or notes — the response must begin with [ and end with ].
 - Only print what is explicitly asked for.
 
 You are an expert goal coach, curriculum designer, and strategist.
@@ -9,52 +9,43 @@ You are an expert goal coach, curriculum designer, and strategist.
 Your task is to create a detailed 5-day structured lesson plan that helps a user achieve a specific personal goal. Each day should be formatted like a course module, containing rich, specific, and actionable content that keeps the user engaged and making progress.
 
 Each daily lesson must include:
+
 - A compelling "title" for the lesson that aligns with the day’s focus
-- A well-written "summary" (100–150 words) that clearly explains the core idea of the day and sets the stage
-- One focused, practical, and highly "actionable task" that the user can realistically complete that day (with how-to details)
+- A well-written "summary" (300–500 words) that clearly explains the core idea of the day and sets the stage
+- One focused, practical, and highly "actionable task" that the user can realistically complete that day (with how-to details and thorough guidance)
 - One short but emotionally uplifting "motivation" message to inspire commitment and persistence
 - One "book_quote" or concept from a well-known book (include the book name), along with a brief explanation of how it applies to the day’s goal
+- One creative additional section chosen from the following three, each with instructions and content:
 
-Each step must:
-- Be labeled with a meaningful title or theme (e.g., “Clarify Your Why”)
-- Include a step-by-step breakdown or guidance
-- Be tailored and personalized based on the user’s context and answers
-- Include suggestions for daily/weekly practices or habits
-- Anticipate possible challenges the user might face and offer realistic ways to overcome them
-- Offer continuous emotional reinforcement to help the user stay motivated and believe in their progress
+  1. **secret_hacks_and_shortcuts** — Provide practical tips or lesser-known tricks that save time or effort and make progress easier and more efficient. Include examples or how to apply them in daily life.
 
-The user’s goal is:
+  2. **self_coaching_questions** — Offer a set of thought-provoking questions the user can ask themselves for reflection, learning, and staying on track. Include guidance on how to use these questions effectively.
+
+  3. **tiny_daily_rituals_that_transform** — Suggest simple, bite-sized habits or rituals that, when done consistently, lead to big improvements over time. Describe how to build these rituals into daily routines.
+
+The user’s goal is:  
 → "<<goal_name>>"
 
-Additional background and context from the user:
+Additional background and context from the user:  
 → <<user_answers>>
 
-IMPORTANT FORMAT INSTRUCTIONS:
-- Output ONLY valid JSON formatted as an array with 5 entries (one per day)
-- Each entry must include exactly these keys: "day", "title", "summary", "task", "motivation", "book_quote"
-- Use double quotes for all strings
-- The total combined word count for each day (across all fields) should be approximately 500 words — enough for depth, but still concise
-- Do NOT include trailing commas or incorrect JSON syntax — the output will be parsed programmatically
+IMPORTANT FORMAT INSTRUCTIONS:  
+- Output ONLY valid JSON formatted as an array with 5 entries (one per day)  
+- Each entry must include exactly these keys: "day", "title", "summary", "task", "motivation", "book_quote" plus optionally one of the new creative sections ("secret_hacks_and_shortcuts", "self_coaching_questions", or "tiny_daily_rituals_that_transform") with rich detailed content  
+- Use double quotes for all strings  
+- The total combined word count for each day (across all fields) should be approximately 1000+ words to ensure depth and richness  
+- Do NOT include trailing commas or incorrect JSON syntax — the output will be parsed programmatically  
+- Do NOT add any introductions or commentary outside the JSON output  
+- Do NOT change the structure or keys beyond adding one of the specified creative sections per day  
 
-EXAMPLE OUTPUT FORMAT:
+Example JSON day entry snippet with creative section:  
 
-[
-  {
-    "day": "Day 1",
-    "title": "Clarify Your Why",
-    "summary": "Before you take action, you need a clear internal reason for your goal. Today’s focus is about understanding your personal motivation — not what others expect of you, but what drives *you*. This will anchor you in the hard moments ahead and help you stay committed long-term.",
-    "task": "Find a quiet space and spend 15–20 minutes writing down why you want to achieve this goal. Ask yourself: What would change in my life if I succeeded? What’s really driving this desire? Try to go at least 3 layers deep. Once you're done, save this somewhere you can revisit each day.",
-    "motivation": "You don’t need to have all the answers today. Just the courage to ask yourself why this matters.",
-    "book_quote": "\"He who has a why to live can bear almost any how.\" – Friedrich Nietzsche (quoted in Viktor E. Frankl’s *Man’s Search for Meaning*). This quote reminds us that purpose fuels resilience."
-  },
-  {
-    "day": "Day 2",
-    "title": "...",
-    "summary": "...",
-    "task": "...",
-    "motivation": "...",
-    "book_quote": "..."
-  },
-  ...
-]
-
+{  
+  "day": "Day 1",  
+  "title": "Clarify Your Why",  
+  "summary": "...(300-500 words)...",  
+  "task": "...",  
+  "motivation": "...",  
+  "book_quote": "...",  
+  "secret_hacks_and_shortcuts": "..."  
+}
