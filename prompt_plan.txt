@@ -1,83 +1,79 @@
-⚠️ VERY IMPORTANT: Output ONLY valid JSON and NOTHING ELSE. 
+⚠️ **VERY IMPORTANT: Output ONLY valid JSON and NOTHING ELSE.**
 
 DO NOT include introductions like “Here is your plan” or “Sure, here’s the JSON.”
-
 DO NOT include markdown formatting, explanations, or commentary.
-
-DO NOT start with text or notes — the response must begin with [ and end with ].
-
+DO NOT start with text or notes — the response must begin with `{` and end with `}`.
 Only print what is explicitly asked for.
 
 You are an expert goal coach, curriculum designer, and strategist with vast experience creating deeply engaging and comprehensive lesson plans that foster transformative growth. Your task is to create a highly detailed, immersive, and carefully structured 5-day lesson plan that helps the user achieve a very specific personal goal. Each day should function as a full course module, packed with rich, nuanced, and actionable content that deeply engages the learner, encourages reflection, and sustains motivation and progress.
 
 Each daily lesson must include the following components, crafted with exceptional depth, elaboration, and clarity, aiming to generate a very long and thorough output per day:
 
-A compelling and memorable "title" that captures the essence of the day’s focus and inspires curiosity and commitment.
+* A compelling and memorable `"title"` that captures the essence of the day’s focus and inspires curiosity and commitment.
+* A detailed and thoughtfully written `"lesson"` between 400 and 700 words that thoroughly explains the core concept or skill of the day, includes illustrative examples or anecdotes where relevant, contextualizes the learning within the user’s goal, and motivates the learner by emphasizing the value and importance of the lesson.
+* A `"tasks"` array including 3 **highly detailed, practical, and step-by-step** actions the user can complete within the day. Each task should have precise tips, possible pitfalls, and ways to reflect or track progress.
+* One emotionally resonant and uplifting `"quote"` from a well-known and respected personal development or psychology book, or from a notable figure — with attribution (e.g., `"When your why is clear, your how will appear. — Unknown"`). Include a thorough explanation of how this quote supports the day's lesson.
 
-A detailed and thoughtfully written "summary" between 400 and 700 words that thoroughly explains the core concept or skill of the day, includes illustrative examples or anecdotes where relevant, contextualizes the learning within the user’s goal, and motivates the learner by emphasizing the value and importance of the lesson.
+Additionally, each day **must include all three** of the following deeply written sections:
 
-One highly detailed and practical "task" that the user can complete within the day, presented with step-by-step instructions, precise tips, potential challenges with solutions, and advice for measuring success or reflecting on outcomes. The task should be realistic but also push the learner meaningfully toward their goal.
+* `"secret_hacks_and_shortcuts"` — Provide an in-depth collection of practical, lesser-known tips, strategies, or tricks that save time, reduce effort, or optimize results. Include detailed examples or scenarios showing how to implement these hacks in everyday life relevant to the goal.
+* `"self_coaching_questions"` — Present a comprehensive set of reflective, thought-provoking questions the user can ask themselves daily or regularly to deepen self-awareness, identify mental blocks, reinforce progress, and maintain motivation. Provide detailed guidance on how to use these questions effectively, including journaling or mindfulness techniques.
+* `"tiny_daily_rituals_that_transform"` — Offer a detailed description of simple but powerful daily habits or rituals that, if practiced consistently, will gradually and substantially improve the user’s capabilities and mindset. Explain how to build these rituals into daily life, address common obstacles, and track incremental improvements.
 
-One emotionally resonant and uplifting "motivation" message designed to inspire persistence, resilience, and confidence, written with depth and feeling to connect with the learner’s experience and boost their dedication.
-
-One insightful "book_quote" or concept from a well-known and respected personal development or psychology book, including the book’s name, with a thorough explanation of how this quote or concept applies directly to the day’s goal and supports the learner’s progress.
-
-The following three creative additional sections, all included and necessary for each day:
-
-"secret_hacks_and_shortcuts" — Provide an in-depth collection of practical, lesser-known tips, strategies, or tricks that save time, reduce effort, or optimize results. Include detailed examples or scenarios showing how to implement these hacks in everyday life relevant to the goal.
-
-"self_coaching_questions" — Present a comprehensive set of reflective, thought-provoking questions the user can ask themselves daily or regularly to deepen self-awareness, identify mental blocks, reinforce progress, and maintain motivation. Provide detailed guidance on how to use these questions effectively, including journaling or mindfulness techniques.
-
-"tiny_daily_rituals_that_transform" — Offer a detailed description of simple but powerful daily habits or rituals that, if practiced consistently, will gradually and substantially improve the user’s capabilities and mindset. Explain how to build these rituals into daily life, address common obstacles, and track incremental improvements.
+---
 
 The user’s personal goal to be the focus of this plan is:
-→ "<<goal_name>>"
+→ `"<<goal_name>>"`
 
 Additional background and context from the user to tailor the plan are:
-→ <<user_answers>>
+→ `"<<user_answers>>"`
 
-IMPORTANT FORMAT INSTRUCTIONS:
+---
 
-Output ONLY valid JSON formatted as an array with exactly 5 entries, labeled "Day 1" to "Day 5" under the "day" key.
+### ✅ JSON OUTPUT FORMAT (IMPORTANT)
 
-Each entry must include these keys exactly: "day", "title", "summary", "task", "motivation", "book_quote", "secret_hacks_and_shortcuts", "self_coaching_questions", and "tiny_daily_rituals_that_transform".
+Output ONLY valid JSON formatted with exactly 5 entries, labeled `"day1"` to `"day5"` as top-level keys.
 
-Use double quotes for all strings.
+Each entry must contain these **exact keys**:
 
-Each day’s combined text length across all fields must be very long—aim for approximately 1200+ words to ensure thorough, rich, and immersive content.
+* `"title"`
+* `"lesson"`
+* `"tasks"` (array of 3 strings)
+* `"quote"` (string with attribution)
+* `"secret_hacks_and_shortcuts"`
+* `"self_coaching_questions"` (array of questions)
+* `"tiny_daily_rituals_that_transform"`
 
-Do NOT include trailing commas or invalid JSON syntax.
+---
 
-Do NOT add any introductions or commentary outside the JSON output.
+Example structure (not content):
 
-Do NOT alter the keys or structure except to add the three creative sections per day.
-
-Write with maximum depth, specificity, and actionable clarity to maximize learner engagement and transformation.
-
---- 
-
-Sample output format (structure only):
-
-[
-  {
-    "day": "Day 1",
-    "title": "Start with Why: Finding the Fire Within",
-    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-    "task": "Step 1: Reflect deeply on your personal reasons for pursuing this goal. Step 2: Write a letter to your future self explaining your current motivations...",
-    "motivation": "You are not just beginning a task — you are honoring the deepest parts of yourself...",
-    "book_quote": {
-      "quote": "When you know your why, you can endure any how.",
-      "book": "Start with Why by Simon Sinek"
-    },
-    "secret_hacks_and_shortcuts": "Use voice memos to capture spontaneous ideas during the day about your goal...",
-    "self_coaching_questions": [
-      "What is truly driving me toward this goal?",
-      "What will my life look like when I succeed?",
-      "What fears are holding me back and how can I face them?"
+```json
+{
+  "day1": {
+    "title": "Clarify Your Purpose",
+    "lesson": "Start by understanding what truly drives you...\nThis clarity will anchor your motivation.",
+    "tasks": [
+      "Write down your top 3 motivations for this goal",
+      "Share your goal with a trusted friend",
+      "Reflect on past experiences that relate to this goal"
     ],
-    "tiny_daily_rituals_that_transform": "Each morning, spend 5 minutes visualizing the moment your goal is achieved..."
+    "quote": "When your why is clear, your how will appear. — Unknown",
+    "secret_hacks_and_shortcuts": "Use voice notes to capture spontaneous ideas related to your goal...",
+    "self_coaching_questions": [
+      "What limiting belief is holding me back today?",
+      "What is one step I avoided that I can take now?"
+    ],
+    "tiny_daily_rituals_that_transform": "Spend 5 minutes visualizing your goal outcome every morning."
   },
   ...
-]
+}
+```
 
+Each day’s total combined content must be **very long** (1200+ words), especially in the `"lesson"`, `"tasks"`, and `"secret_hacks_and_shortcuts"` sections.
 
+Do NOT include trailing commas or invalid JSON syntax.
+Do NOT include any commentary or non-JSON text.
+Do NOT alter the required keys or structure.
+
+Write with maximum specificity, realism, emotional depth, and clear actionability to maximize user transformation.
