@@ -29,6 +29,10 @@ Each day must include the following components, written with exceptional depth a
 
 "tiny_daily_rituals_that_transform" — A detailed micro-habit or ritual the user can practice daily, with tips for consistency, habit-stacking, and measuring change over time.
 
+"visual_infographic_html" — A standalone HTML block (no JavaScript) that metaphorically visualizes the day’s insight using creative layout, shapes, and glassmorphism styling
+
+
+
 The user’s personal goal to focus the plan on is:
 → "<<goal_name>>"
 
@@ -39,7 +43,7 @@ IMPORTANT FORMAT INSTRUCTIONS:
 Output ONLY valid JSON formatted as an array with exactly 5 entries.
 
 Each object must contain the following exact keys:
-"day", "title", "summary", "task", "motivation", "book_quote", "secret_hacks_and_shortcuts", "self_coaching_questions", "tiny_daily_rituals_that_transform"
+"day", "title", "summary", "task", "motivation", "book_quote", "secret_hacks_and_shortcuts", "self_coaching_questions", "tiny_daily_rituals_that_transform","visual_infographic_html"
 
 Each object must begin with "day": "Day X" and be labeled Day 1 through Day 5.
 
@@ -50,12 +54,103 @@ Each day's full response must be very long (aim for 1200–1500 words per day), 
 
 You must not shorten content for brevity — write with maximum specificity, richness, clarity, and emotional resonance.
 
-Output Example (structure only):
 
+DETAILED INSTRUCTIONS AND RULES TO BE FOLLOWED IN THE MAKING OF "visual_infographic_html" ---
+
+"visual_infographic_html" — For each day’s lesson, generate a standalone and fully contained HTML + CSS composition that uses metaphor, layout, shape, and motion to visually express the emotional and conceptual essence of that day's lesson. This should feel like a micro-interactive digital art piece or infographic, not a website section.
+
+ Allowed Elements:
+Only use <div> tags, <style> blocks, and pure CSS. No JavaScript. No images. No external fonts or icons.
+
+Use CSS pseudo-elements, clip-path, transforms, blur, filters, gradients, transitions, and animations.
+
+All code must be directly embeddable and run standalone as an HTML block.
+
+ Mandatory Visual Requirements:
+Each visual must be:
+
+Conceptual — The shapes and motion should metaphorically represent the insight of the day.
+
+Emotive — Express feelings like growth, uncertainty, momentum, insight, or clarity through design choices.
+
+Spatially meaningful — Layouts must reflect transformation or progress (e.g., vertical climb, radial energy, winding path, spiraling thought, layered depth).
+
+Self-contained — Include a short title heading and a 1–2 sentence caption inside the visual.
+
+ Glassmorphism Styling Rules (MANDATORY):
+Backgrounds must use soft transparent fills (e.g. rgba(..., 0.4), hsla(...))
+
+Apply backdrop-filter: blur(8px) or higher for a frosted glass feel
+
+Rounded corners on elements (border-radius)
+
+Layered depth using light box-shadow, inner glow effects
+
+Gradient overlays that resemble light refraction (linear-gradient, radial-gradient)
+
+Text and shapes should feel like they are floating on or under glass
+
+ Animation & Interaction Expectations:
+Animate 1–2 elements using @keyframes or transition
+
+Use motion to represent energy or transformation (e.g. orbiting dots, pulsing paths, ascending layers)
+
+No user interaction needed (pure CSS animation only)
+
+Examples: shape unfolding, layers drifting, line growing, spiral turning
+
+Symbolic Shape Ideas to Use:
+Choose based on the day’s concept:
+
+Mountain / Summit for growth, goals, effort
+
+ Neural Pathways / Grids for learning, thinking
+
+ Spirals for introspection, evolution
+
+ Orbits / Constellations for connection, insight
+
+ Roots or Trees for depth, inner strength
+
+ Ladders / Stairs for step-by-step progress
+
+ Fragments / Pieces for clarity forming from chaos
+
+ Paths / Trails for journeys and exploration
+
+ Tone & Purpose:
+Each visual must feel symbolic, not decorative.
+
+The viewer should feel like the graphic communicates the key message of the lesson visually — even without reading the text.
+
+This is not a decorative background — it’s an infographic made of shapes and space that tell a story.
+
+
+
+Output Example (structure only):
 [
   {
     "day": "Day 1",
     "title": "Start with Why: Finding the Fire Within",
+    "summary": "Full 400–700 word summary here...",
+    "task": "Step-by-step practical task with deep explanation here...",
+    "motivation": "Long motivational message tailored to internal struggle...",
+    "book_quote": {
+      "quote": "Quote goes here...",
+      "book": "Book title — Author name"
+    },
+    "secret_hacks_and_shortcuts": "Deep hacks, tools, and strategies go here...",
+    "self_coaching_questions": [
+      "Reflective question 1 with guidance...",
+      "Reflective question 2 with guidance...",
+      "Reflective question 3 with guidance..."
+    ],
+    "tiny_daily_rituals_that_transform": "Detailed daily micro-habit with tips...",
+    "visual_infographic_html": "<div style=\"...\">HTML + CSS visual block escaped as string...</div><style>...glassmorphism, animations, metaphorical layout...</style>"
+  },
+  {
+    "day": "Day 2",
+    "title": "Title here...",
     "summary": "...",
     "task": "...",
     "motivation": "...",
@@ -69,7 +164,19 @@ Output Example (structure only):
       "...",
       "..."
     ],
-    "tiny_daily_rituals_that_transform": "..."
+    "tiny_daily_rituals_that_transform": "...",
+    "visual_infographic_html": "<div style=\"...\">...</div><style>...</style>"
   },
-  ...
+  {
+    "day": "Day 3",
+    ...
+  },
+  {
+    "day": "Day 4",
+    ...
+  },
+  {
+    "day": "Day 5",
+    ...
+  }
 ]
