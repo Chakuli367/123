@@ -56,6 +56,25 @@ No trailing commas.
 No commentary.
 No markdown.
 
+SPECIAL RULES FOR "task"
+Each day must include exactly three tasks, written as a numbered list with increasing levels of difficulty:
+
+Task 1 should be simple and help the user gain momentum.
+
+Task 2 should build upon the first and introduce moderate challenge.
+
+Task 3 must be the most challenging, pushing the user closer to transformation.
+
+The AI must also think critically about the user's current stage and assess whether the goal is realistically achievable within 5 days. If it is not realistically achievable, include additional guidance and insight woven into the lesson (especially in the “summary” and “task” sections) about:
+
+What foundational skills, mindset shifts, or knowledge the user is currently lacking
+
+What steps they must take after the 5-day plan to continue making progress
+
+How to build confidence and momentum even if full goal achievement is not immediate
+
+All insights must be built into the core plan so that the user always feels guided, empowered, and on a clear path forward — no matter their starting point.
+
 SPECIAL RULES FOR "visual_infographic_html"
 The HTML must:
 
