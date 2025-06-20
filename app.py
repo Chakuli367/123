@@ -49,7 +49,7 @@ def ask_questions():
     if not goal_name:
         return jsonify({"error": "Missing goal_name"}), 400
 
-    prompt_template = load_prompt("prompts/prompt_questions.txt")
+    prompt_template = load_prompt("prompt_questions.txt")
     if not prompt_template:
         return jsonify({"error": "prompt_questions.txt not found"}), 500
 
@@ -81,7 +81,7 @@ def final_plan():
         [f"{i+1}. {answer.strip()}" for i, answer in enumerate(user_answers) if isinstance(answer, str)]
     )
 
-    prompt_template = load_prompt("prompts/prompt_plan.txt")
+    prompt_template = load_prompt("prompt_plan.txt")
     if not prompt_template:
         return jsonify({"error": "prompt_plan.txt not found"}), 500
 
@@ -126,7 +126,7 @@ def start_ai_helper():
     if not goal_name or not isinstance(ai_plan, dict):
         return jsonify({"error": "Missing or invalid goal_name or ai_plan"}), 400
 
-    prompt_template = load_prompt("prompts/prompt_ai_helper_start.txt")
+    prompt_template = load_prompt("prompt_ai_helper_start.txt")
     if not prompt_template:
         return jsonify({"error": "prompt_ai_helper_start.txt not found"}), 500
 
@@ -159,7 +159,7 @@ def ai_helper_reply():
         [f"{m['role'].capitalize()}: {m['content']}" for m in chat_history if isinstance(m, dict)]
     )
 
-    prompt_template = load_prompt("prompts/prompt_ai_helper_reply.txt")
+    prompt_template = load_prompt("prompt_ai_helper_reply.txt")
     if not prompt_template:
         return jsonify({"error": "prompt_ai_helper_reply.txt not found"}), 500
 
