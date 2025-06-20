@@ -10,7 +10,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Groq API client
 client = OpenAI(
     api_key=os.environ.get("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
@@ -50,9 +49,9 @@ def ask_questions():
     if not goal_name:
         return jsonify({"error": "Missing goal_name"}), 400
 
-    prompt_template = load_prompt("prompt_questions.txt")
+    prompt_template = load_prompt("prompts/prompt_questions.txt")
     if not prompt_template:
-        return jsonify({"error": "prompt_questions.txt file not found"}), 500
+        return jsonify({"error": "prompt_questions.txt not found"}), 500
 
     prompt = prompt_template.format(goal_name=goal_name)
 
@@ -82,9 +81,9 @@ def final_plan():
         [f"{i+1}. {answer.strip()}" for i, answer in enumerate(user_answers) if isinstance(answer, str)]
     )
 
-    prompt_template = load_prompt("prompt_plan.txt")
+    prompt_template = load_prompt("prompts/prompt_plan.txt")
     if not prompt_template:
-        return jsonify({"error": "prompt_plan.txt file not found"}), 500
+        return jsonify({"error": "prompt_plan.txt not found"}), 500
 
     prompt = prompt_template.replace("<<goal_name>>", goal_name).replace("<<user_answers>>", formatted_answers)
 
@@ -93,9 +92,8 @@ def final_plan():
             model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.4,
-            max_tokens=7000  # Increased token limit here
+            max_tokens=7000
         )
-
         result = response.choices[0].message.content.strip()
 
         try:
@@ -119,6 +117,72 @@ def final_plan():
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
+@app.route('/start-ai-helper', methods=['POST'])
+def start_ai_helper():
+    data = request.get_json()
+    goal_name = data.get("goal_name", "").strip()
+    ai_plan = data.get("ai_plan")
+
+    if not goal_name or not isinstance(ai_plan, dict):
+        return jsonify({"error": "Missing or invalid goal_name or ai_plan"}), 400
+
+    prompt_template = load_prompt("prompts/prompt_ai_helper_start.txt")
+    if not prompt_template:
+        return jsonify({"error": "prompt_ai_helper_start.txt not found"}), 500
+
+    prompt = prompt_template.replace("<<goal_name>>", goal_name).replace("<<ai_plan>>", json.dumps(ai_plan, indent=2))
+
+    try:
+        response = client.chat.completions.create(
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.4,
+            max_tokens=1000
+        )
+        result = response.choices[0].message.content.strip()
+        return jsonify({"ai_intro": result})
+
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+@app.route('/ai-helper-reply', methods=['POST'])
+def ai_helper_reply():
+    data = request.get_json()
+    goal_name = data.get("goal_name", "").strip()
+    ai_plan = data.get("ai_plan")
+    chat_history = data.get("chat_history", [])
+
+    if not goal_name or not isinstance(ai_plan, dict) or not isinstance(chat_history, list):
+        return jsonify({"error": "Missing or invalid goal_name, ai_plan or chat_history"}), 400
+
+    history_text = "\n".join(
+        [f"{m['role'].capitalize()}: {m['content']}" for m in chat_history if isinstance(m, dict)]
+    )
+
+    prompt_template = load_prompt("prompts/prompt_ai_helper_reply.txt")
+    if not prompt_template:
+        return jsonify({"error": "prompt_ai_helper_reply.txt not found"}), 500
+
+    prompt = (
+        prompt_template
+        .replace("<<goal_name>>", goal_name)
+        .replace("<<ai_plan>>", json.dumps(ai_plan, indent=2))
+        .replace("<<chat_history>>", history_text)
+    )
+
+    try:
+        response = client.chat.completions.create(
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.4,
+            max_tokens=1500
+        )
+        result = response.choices[0].message.content.strip()
+        return jsonify({"ai_reply": result})
+
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
 @app.route('/get-user-logs', methods=['GET'])
 def get_all_logs():
     logs = read_logs()
@@ -127,4 +191,3 @@ def get_all_logs():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
